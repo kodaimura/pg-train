@@ -1,0 +1,14 @@
+{:logging {
+  :level #profile {:dev :debug
+                   :prod :debug}
+  :console #profile {:prod {:encoder :json}
+                     :default true}
+  :file {:file "log/app.log"}
+  :overrides {"org.eclipse.jetty" :info}}
+
+ :webserver {
+  :host #profile {:dev "localhost"
+                  :prod "pg-train.murakamikodai.com"}
+  :port #profile {:dev 8000
+                  :prod 3200}}
+}

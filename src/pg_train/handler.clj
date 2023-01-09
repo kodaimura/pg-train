@@ -1,19 +1,16 @@
 (ns pg-train.handler
   (:require 
     [reitit.ring :as ring]
+    [pg-train.routes.login :refer [login-routes]]
     [pg-train.middleware :as middleware]))
 
-
-(defn get-test
-  [req]
-  {:status 200 :body "test"})
 
 (def app-routes
   (ring/ring-handler
     (ring/router
-      ["/"
-        ["" {:get get-test}]
-      ])))
+      [login-routes])
+    (ring/routes
+      (ring/create-resource-handler {:path "/"}))))
 
 (def handler
   (middleware/wrap-base app-routes))

@@ -1,0 +1,13 @@
+* { 
+  margin: 0; 
+  padding: 0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  font-family: serif;
+  height: 100%;
+}

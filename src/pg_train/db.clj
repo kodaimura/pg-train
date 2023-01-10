@@ -10,7 +10,7 @@
 (defn create-users-table! []
   (let [sql "create table if not exists users (
               id integer primary key autoincrement,
-              username text,
+              username text unique,
               password text,
               created_at text default (datetime('now','localtime')),
               updated_at text default (datetime('now','localtime')))"]

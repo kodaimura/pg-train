@@ -4,13 +4,21 @@
     [pg-train.db :refer [db]]))
 
 
-(defn create-user!
+(defn insert!
   [user]
   (let [sql [
          "insert into users (
-           id, username, password
-         ) values (?, ?, ?)"
-         (:id user)
+           username, password
+         ) values (?, ?)"
          (:username user)
          (:password user)]]
      (sql/query db sql)))
+
+(defn select-by-username
+  [username]
+  (let [sql [
+         "select id, username, password 
+          from users
+          where username = ?"
+          username]]
+    (sql/query db sql)))

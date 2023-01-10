@@ -11,8 +11,14 @@
   (template/render "login.html" {}))
 
 (defn login-post
-  [req])
-
+  [req]
+  (let [params (req :params)
+        user (models.user/select-by-username (:username params))]
+    (if (and (not (empty? user))
+             (hashers/check (:password params) 
+                            (:users/password (first user))))
+        (redirect "/")
+        (redirect "/login"))))
 
 (defn signup
   [req]
@@ -21,7 +27,7 @@
 (defn signup-post
   [req]
   (let [params (req :params)]
-    (try (models.user/create-user! (assoc (dissoc params :password)
+    (try (models.user/insert! (assoc (dissoc params :password)
                                  :password (hashers/derive (:password params))))
       (redirect "/login")
       (catch Exception _

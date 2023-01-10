@@ -1,4 +1,4 @@
-(ns pg-train.routes.login
+(ns pg-train.routes.user
   (:require
     [buddy.hashers :as hashers]
     [ring.util.response :refer [redirect]]
@@ -34,7 +34,7 @@
         (redirect "/signup")))))
 
 
-(def login-routes
+(def user-routes
   [""
    {:middleware []}
    ["/login" {:get  login

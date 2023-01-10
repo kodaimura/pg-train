@@ -1,14 +1,14 @@
 (ns pg-train.handler
   (:require 
     [reitit.ring :as ring]
-    [pg-train.routes.login :refer [login-routes]]
+    [pg-train.routes.user :refer [user-routes]]
     [pg-train.middleware :as middleware]))
 
 
 (def app-routes
   (ring/ring-handler
     (ring/router
-      [login-routes])
+      [user-routes])
     (ring/routes
       (ring/create-resource-handler {:path "/"}))))
 

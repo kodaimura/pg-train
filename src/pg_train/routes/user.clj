@@ -2,6 +2,7 @@
   (:require
     [buddy.hashers :as hashers]
     [ring.util.response :refer [redirect]]
+    [pg-train.jwt :as jwt]
     [pg-train.template :as template]
     [pg-train.models.user :as models.user]))
 
@@ -13,11 +14,15 @@
 (defn login-post
   [req]
   (let [params (req :params)
-        user (models.user/select-by-username (:username params))]
-    (if (and (not (empty? user))
-             (hashers/check (:password params) 
-                            (:users/password (first user))))
-        (redirect "/")
+        result (models.user/select-by-username (:username params))
+        user (if (empty? result) nil (first result))
+        login-ok? (and (not (nil? user))
+                       (hashers/check 
+                        (:password params) 
+                        (:users/password user)))]
+    (if login-ok? 
+        (let [token (jwt/create-token (:users/id user) (:users/username user))]
+          {:status 200 :body token})
         (redirect "/login"))))
 
 (defn signup

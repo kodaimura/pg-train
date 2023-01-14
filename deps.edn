@@ -14,4 +14,5 @@
   selmer/selmer {:mvn/version "1.12.55"}
   clj-time/clj-time {:mvn/version "0.15.2"}
   buddy/buddy-hashers {:mvn/version "1.8.158"}
-  buddy/buddy-auth {:mvn/version "3.0.1"}}}
+  buddy/buddy-auth {:mvn/version "3.0.1"}
+  ring/ring-json {:mvn/version "0.5.1"}}}

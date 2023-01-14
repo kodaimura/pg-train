@@ -8,10 +8,37 @@
   <title>login</title>
 </head>
 <body>
-  <form method="post" action="login">
+  <form name="loginForm" onsubmit="return false">
     <input type="text" name="username">
     <input type="password" name="password">
-    <input type="submit" value="login">
+    <input type="button" id="send" value="login">
   </form>
+
+  <script type="text/javascript">
+    document.getElementById('send').addEventListener('click', () => {
+      const form = document.forms.loginForm;
+      const username = form.username.value;
+      const password = form.password.value;
+
+      fetch('login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({username, password})
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then(data => {
+        localStorage.setItem("token", data.body);
+        document.location.href = "/";
+      })
+      .catch(console.error);
+    })
+  </script>
 </body>
 </html>

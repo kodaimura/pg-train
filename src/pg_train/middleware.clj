@@ -5,7 +5,8 @@
     [ring.logger :refer [wrap-log-request-params 
                          wrap-log-response
                          wrap-log-request-start]]
-    [ring.middleware.keyword-params :refer [wrap-keyword-params]]))
+    [ring.middleware.keyword-params :refer [wrap-keyword-params]]
+    [ring.middleware.json :refer [wrap-json-params wrap-json-response]]))
 
 
 (defn wrap-base
@@ -15,4 +16,6 @@
       (wrap-log-request-params)
       (wrap-keyword-params)
       (wrap-params)
+      (wrap-json-params)
+      (wrap-json-response)
       (wrap-log-request-start)))

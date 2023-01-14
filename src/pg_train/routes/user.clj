@@ -1,7 +1,7 @@
 (ns pg-train.routes.user
   (:require
     [buddy.hashers :as hashers]
-    [ring.util.response :refer [redirect]]
+    [ring.util.response :refer [response redirect]]
     [pg-train.jwt :as jwt]
     [pg-train.template :as template]
     [pg-train.models.user :as models.user]))
@@ -13,7 +13,7 @@
 
 (defn login-post
   [req]
-  (let [params (req :params)
+  (let [params (:params req)
         result (models.user/select-by-username (:username params))
         user (if (empty? result) nil (first result))
         login-ok? (and (not (nil? user))
@@ -21,9 +21,10 @@
                         (:password params) 
                         (:users/password user)))]
     (if login-ok? 
-        (let [token (jwt/create-token (:users/id user) (:users/username user))]
-          {:status 200 :body token})
-        (redirect "/login"))))
+        (let [token (jwt/create-token (:users/id user) 
+                                      (:users/username user))]
+          (response {:status 200 :body token}))
+        (response {:status 401 :body "Unauthorized"}))))
 
 (defn signup
   [req]

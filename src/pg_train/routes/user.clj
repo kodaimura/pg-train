@@ -40,6 +40,11 @@
       (catch Exception _
         (redirect "/signup")))))
 
+(defn logout
+  [req]
+  (assoc (response "logout") 
+         :cookies {"token" {:value ""}}))
+
 (defn profile
   [req]
   (response (:identity req)))
@@ -51,7 +56,8 @@
    ["/login" {:get login-page
    	          :post login-post}]
    ["/signup" {:get signup-page
-   	           :post signup-post}]])
+   	           :post signup-post}]
+   ["/logout" {:get logout}]])
 
 (def user-routes
   [""

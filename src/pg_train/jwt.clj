@@ -1,20 +1,28 @@
 (ns pg-train.jwt
   (:require 
-    [buddy.auth.backends.token :refer [jws-backend]]
-    [buddy.auth.middleware :refer  [wrap-authorization wrap-authentication]]
+    [ring.util.response :refer [redirect status]]
     [buddy.sign.jwt :as jwt]
     [clj-time.core :as time]))
 
 
 (def secret "secret")
-(def auth-backend
-  (jws-backend {:secret secret}))
 
-(defn wrap-auth
+(defn unauthorized-handler
+  [request]
+  (let [uri (:uri request)]
+    (if (and (not (nil? uri)) (re-matches #"/api.*" uri))
+        (status 401)
+        (redirect "/login"))))
+
+(defn wrap-jwt-authentication
   [handler]
-  (-> handler
-    (wrap-authorization auth-backend)
-    (wrap-authentication auth-backend)))
+  (fn [request]
+    (let [token (get-in request [:cookies "token" :value])]
+      (try
+        (let [claims (jwt/unsign token secret)]
+          (handler (assoc request :identity claims)))
+        (catch Exception e
+          (unauthorized-handler request))))))
 
 (defn create-token
   [id username]

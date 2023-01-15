@@ -7,7 +7,7 @@
     [pg-train.models.user :as models.user]))
 
 
-(defn login
+(defn login-page
   [req]
   (response (template/render "login.html" {})))
 
@@ -27,7 +27,7 @@
                  :cookies {"token" {:value token}}))
         (status 401))))
 
-(defn signup
+(defn signup-page
   [req]
   (response (template/render "signup.html" {})))
 
@@ -40,10 +40,20 @@
       (catch Exception _
         (redirect "/signup")))))
 
-(def user-routes
+(defn profile
+  [req]
+  (response (:identity req)))
+
+
+(def account-routes
   [""
    {:middleware []}
-   ["/login" {:get login
+   ["/login" {:get login-page
    	          :post login-post}]
-   ["/signup" {:get signup
+   ["/signup" {:get signup-page
    	           :post signup-post}]])
+
+(def user-routes
+  [""
+   {:middleware [jwt/wrap-jwt-authentication]}
+     ["/api/profile" {:get profile}]])

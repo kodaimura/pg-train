@@ -6,7 +6,8 @@
                          wrap-log-response
                          wrap-log-request-start]]
     [ring.middleware.keyword-params :refer [wrap-keyword-params]]
-    [ring.middleware.json :refer [wrap-json-params wrap-json-response]]))
+    [ring.middleware.json :refer [wrap-json-params wrap-json-response]]
+    [ring.middleware.cookies :refer [wrap-cookies]]))
 
 
 (defn wrap-base
@@ -18,4 +19,6 @@
       (wrap-params)
       (wrap-json-params)
       (wrap-json-response)
+      (wrap-cookies)
       (wrap-log-request-start)))
+      

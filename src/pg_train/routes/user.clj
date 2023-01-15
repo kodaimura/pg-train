@@ -1,7 +1,7 @@
 (ns pg-train.routes.user
   (:require
     [buddy.hashers :as hashers]
-    [ring.util.response :refer [response redirect]]
+    [ring.util.response :refer [response redirect status]]
     [pg-train.jwt :as jwt]
     [pg-train.template :as template]
     [pg-train.models.user :as models.user]))
@@ -9,7 +9,7 @@
 
 (defn login
   [req]
-  (template/render "login.html" {}))
+  (response (template/render "login.html" {})))
 
 (defn login-post
   [req]
@@ -23,12 +23,13 @@
     (if login-ok? 
         (let [token (jwt/create-token (:users/id user) 
                                       (:users/username user))]
-          (response {:status 200 :body token}))
-        (response {:status 401 :body "Unauthorized"}))))
+          (assoc (response "set cookie") 
+                 :cookies {"token" {:value token}}))
+        (status 401))))
 
 (defn signup
   [req]
-  (template/render "signup.html" {}))
+  (response (template/render "signup.html" {})))
 
 (defn signup-post
   [req]
@@ -39,11 +40,10 @@
       (catch Exception _
         (redirect "/signup")))))
 
-
 (def user-routes
   [""
    {:middleware []}
-   ["/login" {:get  login
+   ["/login" {:get login
    	          :post login-post}]
    ["/signup" {:get signup
    	           :post signup-post}]])

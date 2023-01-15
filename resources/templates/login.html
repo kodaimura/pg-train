@@ -31,10 +31,6 @@
         if (!response.ok) {
           throw new Error(response.statusText);
         }
-        return response.json();
-      })
-      .then(data => {
-        localStorage.setItem("token", data.body);
         document.location.href = "/";
       })
       .catch(console.error);

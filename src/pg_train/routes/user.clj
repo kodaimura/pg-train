@@ -42,8 +42,10 @@
 
 (defn logout
   [req]
-  (assoc (response "logout") 
-         :cookies {"token" {:value ""}}))
+  {:status 302
+   :headers {"Location" "/login"}
+   :body    ""
+   :cookies {"token" {:value ""}}})
 
 (defn profile
   [req]

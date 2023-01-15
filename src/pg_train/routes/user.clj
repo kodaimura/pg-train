@@ -23,7 +23,7 @@
                         (:users/password user)))]
     (if login-ok? 
         (let [token (jwt/create-token (:users/id user) name)]
-          (assoc (redirect (if (= "admin" name) "/admin" "/home"))
+          (assoc (response "SetCookie")
                  :cookies {"token" {:value token}}))
         (status 401))))
 

@@ -28,10 +28,11 @@
         body: JSON.stringify({username, password})
       })
       .then(response => {
+        console.log(response)
         if (!response.ok) {
           throw new Error(response.statusText);
         }
-        document.location.href = "/";
+        document.location.href = "/home";
       })
       .catch(console.error);
     })

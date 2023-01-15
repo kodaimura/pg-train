@@ -30,3 +30,11 @@
                 :username username
                 :exp (time/plus (time/now) (time/days 30))}]
   	(jwt/sign claims secret)))
+
+(defn payload-username
+  [request]
+  (get-in request [:identity :username]))
+
+(defn payload-id
+  [request]
+  (get-in request [:identity :id]))

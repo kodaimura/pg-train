@@ -12,18 +12,18 @@
   (response (template/render "login.html" {})))
 
 (defn login-post
-  [req]
-  (let [params (:params req)
-        result (models.user/select-by-username (:username params))
+  [{:keys [params]}]
+  (let [name (:username params)
+        pass (:password params)
+        result (models.user/select-by-username name)
         user (if (empty? result) nil (first result))
         login-ok? (and (not (nil? user))
                        (hashers/check 
-                        (:password params) 
+                        pass
                         (:users/password user)))]
     (if login-ok? 
-        (let [token (jwt/create-token (:users/id user) 
-                                      (:users/username user))]
-          (assoc (response "set cookie") 
+        (let [token (jwt/create-token (:users/id user) name)]
+          (assoc (redirect (if (= "admin" name) "/admin" "/home"))
                  :cookies {"token" {:value token}}))
         (status 401))))
 
@@ -32,20 +32,17 @@
   (response (template/render "signup.html" {})))
 
 (defn signup-post
-  [req]
-  (let [params (req :params)]
-    (try (models.user/insert! (assoc (dissoc params :password)
-                                 :password (hashers/derive (:password params))))
-      (redirect "/login")
-      (catch Exception _
-        (redirect "/signup")))))
+  [{:keys [params]}]
+  (try (models.user/insert! (assoc (dissoc params :password)
+                                   :password (hashers/derive (:password params))))
+    (redirect "/login")
+    (catch Exception _
+      (redirect "/signup"))))
 
 (defn logout
   [req]
-  {:status 302
-   :headers {"Location" "/login"}
-   :body    ""
-   :cookies {"token" {:value ""}}})
+  (assoc (redirect "/login")
+         :cookies {"token" {:value ""}}))
 
 (defn profile
   [req]

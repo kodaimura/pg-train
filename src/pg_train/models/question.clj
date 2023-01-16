@@ -67,7 +67,7 @@
             answer, 
             level, 
             respondents, 
-            classifying_id,
+            classifying_id
           from questions
           where del_flg = '0'"]]
     (sql/query db sql)))

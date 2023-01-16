@@ -2,12 +2,19 @@
   (:require
     [ring.util.response :refer [response redirect status]]
     [pg-train.jwt :as jwt]
-    [pg-train.template :as template]))
+    [pg-train.template :as template]
+    [pg-train.models.question :as models.question]))
 
 
 (defn home-page
   [req]
   (response (template/render "home.html" {})))
+
+(defn questions-page
+  [req]
+  (let [questions (models.question/select-all)]
+    (response (template/render "questions.html"
+                {:questions questions}))))
 
 (defn wrap-home
   [handler]
@@ -21,4 +28,5 @@
   ["/home"
    {:middleware [jwt/wrap-jwt-authentication
    	             wrap-home]}
-   ["" {:get home-page}]])
+   ["" {:get home-page}]
+   ["/questions" {:get questions-page}]])

@@ -9,11 +9,14 @@
 </head>
 <body>
   <form method="post">
-    <input type="text" name="statement">
-    <input type="text" name="hint">
-    <input type="text" name="answer">
-    <input type="number" name="level">
-    <input type="submit" id="send" value="create">
+    <input type="hidden" name="id" value="{{question.questions/id}}">
+    <input type="text" name="statement" value="{{question.questions/statement}}">
+    <input type="text" name="hint" value="{{question.questions/hint}}">
+    <input type="text" name="answer" value="{{question.questions/answer}}">
+    <input type="number" name="level" value="{{question.questions/level}}">
+    <input type="hidden" name="classifying_id" value="{{question.questions/classifying_id}}">
+    <input type="hidden" name="del_flg" value="{{question.questions/del_flg}}">
+    <input type="submit" id="send" value="regist">
   </form>
 </body>
 </html>

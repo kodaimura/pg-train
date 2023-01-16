@@ -8,12 +8,14 @@
   [answer]
   (let [sql [
          "insert into answers (
+            question_id,
             user_id,
             correct_flg,
             program,
             help_flg,
             advice
-          ) values (?,?,?,?,?)"
+          ) values (?, ?,?,?,?,?)"
+         (:question_id answer)
          (:user_id answer)
          (:correct_flg answer)
          (:program answer)
@@ -26,12 +28,14 @@
   (let [sql [
          "update answers
           set
+            question_id = ?,
             user_id = ?,
             correct_flg = ?,
             program = ?,
             help_flg = ?,
             advice = ?
 		      where id = ?"
+		     (:question_id answer)
          (:user_id answer)
          (:correct_flg answer)
          (:program answer)
@@ -45,6 +49,7 @@
   (let [sql [
          "select
             id,
+            question_id,
             user_id,
             correct_flg,
             program,
@@ -62,6 +67,7 @@
   (let [sql [
          "select
             id,
+            question_id,
             user_id,
             correct_flg,
             program,
@@ -71,5 +77,24 @@
             update_at
           from questions
           where user_id = ?"
+          user_id]]
+    (sql/query db sql)))
+
+(defn select-by-question_id_and_user_id
+  [question_id user_id]
+  (let [sql [
+         "select
+            id,
+            question_id,
+            user_id,
+            correct_flg,
+            program,
+            help_flg,
+            advice,
+            create_at,
+            update_at
+          from questions
+          where question_id = ? and user_id = ?"
+          question_id
           user_id]]
     (sql/query db sql)))

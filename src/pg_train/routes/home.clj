@@ -3,7 +3,8 @@
     [ring.util.response :refer [response redirect status]]
     [pg-train.jwt :as jwt]
     [pg-train.template :as template]
-    [pg-train.models.question :as models.question]))
+    [pg-train.models.question :as models.question]
+    [pg-train.models.answer :as models.answer]))
 
 
 (defn home-page
@@ -13,6 +14,12 @@
 (defn questions-page
   [req]
   (let [questions (models.question/select-all)]
+    (response (template/render "questions.html"
+                {:questions questions}))))
+
+(defn answer-page
+  [req]
+  (let [answer (models.answer/select)]
     (response (template/render "questions.html"
                 {:questions questions}))))
 
@@ -29,4 +36,5 @@
    {:middleware [jwt/wrap-jwt-authentication
    	             wrap-home]}
    ["" {:get home-page}]
-   ["/questions" {:get questions-page}]])
+   ["/questions" {:get questions-page}]
+   ["/questions/:id" {:get answer-page}]])

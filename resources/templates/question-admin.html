@@ -15,7 +15,13 @@
     <input type="text" name="answer" value="{{question.questions/answer}}">
     <input type="number" name="level" value="{{question.questions/level}}">
     <input type="hidden" name="classifying_id" value="{{question.questions/classifying_id}}">
-    <input type="hidden" name="del_flg" value="{{question.questions/del_flg}}">
+    {% if question.questions/del_flg = 0 %}
+    有効<input type="radio" name="del_flg" value="0" checked>
+    無効<input type="radio" name="del_flg" value="1">
+    {% else %}
+    有効<input type="radio" name="del_flg" value="0">
+    無効<input type="radio" name="del_flg" value="1" checked>
+    {% endif %}
     <input type="submit" id="send" value="regist">
   </form>
 </body>

@@ -12,7 +12,7 @@
 
 (defn questions-page
   [req]
-  (let [questions (models.question/select-all)]
+  (let [questions (models.question/select-all-admin)]
     (response (template/render "questions-admin.html"
                 {:questions questions}))))
 

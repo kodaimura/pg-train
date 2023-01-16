@@ -67,8 +67,22 @@
             answer, 
             level, 
             respondents, 
-            classifying_id, 
-            del_flg
+            classifying_id,
           from questions
           where del_flg = '0'"]]
+    (sql/query db sql)))
+
+(defn select-all-admin
+  []
+  (let [sql [
+         "select
+            id,
+            statement, 
+            hint, 
+            answer, 
+            level, 
+            respondents, 
+            classifying_id, 
+            del_flg
+          from questions"]]
     (sql/query db sql)))

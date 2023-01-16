@@ -12,7 +12,7 @@
     <thead>
     <tr>
       <th>id</th>
-      <th>statement</th>
+      <th>title</th>
       <th>level</th>
       <th>respondents</th>
     </tr>
@@ -21,10 +21,9 @@
     {% for q in questions %}
       <tr>
         <td>{{q.questions/id}}</td>
-        <td>{{q.questions/statement}}</td>
+        <td>{{q.questions/title}}</td>
         <td>{{q.questions/level}}</td>
         <td>{{q.questions/respondents}}</td>
-        <td><a href="questions/{{q.questions/id}}">更新</a></td>
       </tr>
     {% endfor %}
     </tbody>

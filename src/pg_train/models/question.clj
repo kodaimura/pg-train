@@ -8,11 +8,13 @@
   [question]
   (let [sql [
          "insert into questions (
+            title,
             statement, 
             hint, 
             answer, 
             level
-          ) values (?, ?, ?, ?)"
+          ) values (?, ?, ?, ?, ?)"
+         (:title question)
          (:statement question)
          (:hint question)
          (:answer question)
@@ -24,6 +26,7 @@
   (let [sql [
          "update questions
           set
+            title = ?,
             statement = ?,
             hint = ?,
             answer = ?,
@@ -31,6 +34,7 @@
             classifying_id = ?,
             del_flg = ?
           where id = ?"
+         (:title question)
          (:statement question)
          (:hint question)
          (:answer question)
@@ -45,6 +49,7 @@
   (let [sql [
          "select 
             id,
+            title,
             statement, 
             hint, 
             answer, 
@@ -62,6 +67,7 @@
   (let [sql [
          "select
             id,
+            title,
             statement, 
             hint, 
             answer, 
@@ -77,6 +83,7 @@
   (let [sql [
          "select
             id,
+            title,
             statement, 
             hint, 
             answer, 

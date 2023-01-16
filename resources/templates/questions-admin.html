@@ -12,6 +12,7 @@
     <thead>
     <tr>
       <th>id</th>
+      <th>title</th>
       <th>statement</th>
       <th>answer</th>
       <th>hint</th>
@@ -23,6 +24,7 @@
     {% for q in questions %}
       <tr>
         <td>{{q.questions/id}}</td>
+        <td>{{q.questions/title}}</td>
         <td>{{q.questions/statement}}</td>
         <td>{{q.questions/answer}}</td>
         <td>{{q.questions/hint}}</td>

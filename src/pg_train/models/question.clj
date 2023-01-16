@@ -11,16 +11,12 @@
             statement, 
             hint, 
             answer, 
-            level, 
-            respondents, 
-            classifying_id
-          ) values (?, ?, ?, ?, ?, ?)"
+            level
+          ) values (?, ?, ?, ?)"
          (:statement question)
          (:hint question)
          (:answer question)
-         (:level question)
-         (:respondents question)
-         (:classifying_id question)]]
+         (:level question)]]
      (sql/query db sql)))
 
 (defn update!
@@ -32,7 +28,6 @@
             hint = ?,
             answer = ?,
             level = ?,
-            respondents = ?,
             classifying_id = ?,
             del_flg = ?
           where id = ?"
@@ -40,7 +35,6 @@
          (:hint question)
          (:answer question)
          (:level question)
-         (:respondents question)
          (:classifying_id question)
          (:del_flg question)
          (:id question)]]
@@ -50,6 +44,7 @@
   [id]
   (let [sql [
          "select 
+            id,
             statement, 
             hint, 
             answer, 
@@ -66,6 +61,7 @@
   []
   (let [sql [
          "select
+            id,
             statement, 
             hint, 
             answer, 

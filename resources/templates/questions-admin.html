@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% style "/css/style.css" %}
+  <title>questions</title>
+</head>
+<body>
+  <table>
+    <thead>
+    <tr>
+      <th>id</th>
+      <th>statement</th>
+      <th>answer</th>
+      <th>hint</th>
+      <th>level</th>
+      <th>respondents</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for q in questions %}
+      <tr>
+        <td>{{q.questions/id}}</td>
+        <td>{{q.questions/statement}}</td>
+        <td>{{q.questions/answer}}</td>
+        <td>{{q.questions/hint}}</td>
+        <td>{{q.questions/level}}</td>
+        <td>{{q.questions/respondents}}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <a href="questions/new">追加</a>
+</body>
+</html>

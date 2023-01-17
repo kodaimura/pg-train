@@ -22,6 +22,7 @@
         (let [claims (jwt/unsign token secret)]
           (handler (assoc request :identity claims)))
         (catch Exception e
+          (println e)
           (unauthorized-handler request))))))
 
 (defn create-token

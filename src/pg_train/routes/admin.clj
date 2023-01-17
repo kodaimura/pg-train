@@ -21,7 +21,6 @@
   (if (= "new" (:id path-params))
       (response (template/render "question-admin.html" {}))
       (let [question (models.question/select-by-id (:id path-params))]
-        (println path-params question)
         (if (empty? question)
             (response (template/render "question-admin.html" {}))
             (response (template/render "question-admin.html" 

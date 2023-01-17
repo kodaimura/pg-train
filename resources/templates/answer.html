@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% style "/css/style.css" %}
+  <title>answer</title>
+</head>
+<body>
+  {{question.questions/id}}
+  {{question.questions/title}}
+  {{question.questions/statement}}
+  {{question.questions/level}}
+
+  
+  <input type="hidden" id="correct-answer" value="{{question.questions/answer}}">
+  <p id="pass-fail"></p>
+  {% if answer.answers/correct_flg = "1" %}
+  <form name="answerForm" onsubmit="return false">
+    <input type="text" name="answer" value="{{question.questions/answer}}" disabled>
+    <input type="button" id="send-answer" value="send" disabled>
+  </form>
+  {% else %}
+  <form name="answerForm" onsubmit="return false">
+    <input type="text" name="answer">
+    <input type="button" id="send-answer" value="send">
+  </form>
+  {% endif %}
+
+  <form method="post">
+    <input type="hidden" name="question_id" value="{{question.questions/id}}">
+    <input type="text">
+  </form>
+
+  <script type="text/javascript">
+    document.getElementById('send-answer').addEventListener('click', () => {
+      const correctAnswer = document.getElementById('correct-answer').value;
+      const form = document.forms.answerForm;
+
+      if (correctAnswer === form.answer.value) {
+        fetch(`${location.pathname}/correct`, {method: 'POST'});
+        document.getElementById('pass-fail').innerHTML = "OK";
+      } else {
+        document.getElementById('pass-fail').innerHTML = "NG";
+      }
+      
+    })
+  </script>
+</body>
+</html>

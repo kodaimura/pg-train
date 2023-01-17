@@ -21,15 +21,15 @@ CREATE TABLE IF NOT EXISTS questions (
 );
 
 CREATE TABLE IF NOT EXISTS answers (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	user_id INTEGER NOT NULL,
-	question_id INTEGER NOT NULL,
+	user_id INTEGER,
+	question_id INTEGER,
 	correct_flg TEXT NOT NULL DEFAULT '0',
 	program TEXT,
 	help_flg TEXT NOT NULL DEFAULT '0',
 	advice TEXT,
 	create_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
-	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime'))
+	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
+	PRIMARY KEY(user_id, question_id)
 );
 
 CREATE TRIGGER IF NOT EXISTS trg_users_upd AFTER UPDATE ON users

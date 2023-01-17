@@ -15,6 +15,7 @@
       <th>title</th>
       <th>level</th>
       <th>respondents</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
@@ -24,10 +25,10 @@
         <td>{{q.questions/title}}</td>
         <td>{{q.questions/level}}</td>
         <td>{{q.questions/respondents}}</td>
+        <td><a href="questions/{{q.questions/id}}">回答</a></td>
       </tr>
     {% endfor %}
     </tbody>
   </table>
-  <a href="questions/new">追加</a>
 </body>
 </html>

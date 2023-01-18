@@ -13,17 +13,17 @@
 (defn questions-page
   [req]
   (let [questions (models.question/select-all-admin)]
-    (response (template/render "questions-admin.html"
+    (response (template/render "admin-questions.html"
                 {:questions questions}))))
 
 (defn question-page
   [{:keys [path-params]}]
   (if (= "new" (:id path-params))
-      (response (template/render "question-admin.html" {}))
+      (response (template/render "admin-question.html" {}))
       (let [question (models.question/select-by-id (:id path-params))]
         (if (empty? question)
-            (response (template/render "question-admin.html" {}))
-            (response (template/render "question-admin.html" 
+            (response (template/render "admin-question.html" {}))
+            (response (template/render "admin-question.html" 
                         {:question (first question)}))))))
 
 (defn register-question!

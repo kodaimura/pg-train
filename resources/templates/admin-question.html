@@ -11,8 +11,8 @@
   <form method="post">
     <input type="text" name="title" value="{{question.questions/title}}">
     <input type="text" name="statement" value="{{question.questions/statement}}">
-    <input type="text" name="hint" value="{{question.questions/hint}}">
     <input type="text" name="answer" value="{{question.questions/answer}}">
+    <input type="text" name="hint" value="{{question.questions/hint}}">
     <input type="number" name="level" value="{{question.questions/level}}">
     <input type="hidden" name="classifying_id" value="{{question.questions/classifying_id}}">
     {% if question.questions/del_flg = 1 %}

@@ -54,22 +54,22 @@
             {:correct_flg "1"} {:question_id question_id :user_id user_id}))
       (status 200)
       (catch Exception _
-        (redirect "/login")))))
+        (status 500)))))
 
 (defn register-help_flg!
   [req]
   (let [question_id (get-in req [:path-params :id])
         user_id (jwt/payload-id req)
-        answer (models.answer/select-by-question_id_and_user_id question_id user_id)
-        answer* (if (empty? answer) 
-                    (answer-init question_id user_id) 
-                    (first answer))]
+        answer (models.answer/select-by-question_id_and_user_id question_id user_id)]
     (try
-      (models.answer/upsert! (assoc (dissoc answer* :help_flg)
-                                    :help_flg "1"))
+      (if (empty? answer)
+          (models.answer/insert! 
+            (answer-init question_id user_id {:help_flg "1"}))
+          (models.answer/update!
+            {:help_flg "1"} {:question_id question_id :user_id user_id}))
       (status 200)
       (catch Exception _
-        (redirect "/login")))))
+        (status 500)))))
 
 (defn register-program!
   [req]
@@ -85,7 +85,7 @@
             {:program program} {:question_id question_id :user_id user_id}))
       (status 200)
       (catch Exception _
-        (redirect "/login")))))
+        (status 500)))))
 
 (defn wrap-home
   [handler]

@@ -33,13 +33,23 @@
     <input type="submit" id="send-program" value="send">
   </form>
 
+  {% if answer.answers/help_flg = "1" %}
+  <form name="helpForm" onsubmit="return false">
+    <input type="button" id="send-help" value="help" disabled>
+  </form>
+  {% else %}
+  <form name="helpForm" onsubmit="return false">
+    <input type="button" id="send-help" value="help">
+  </form>
+  {% endif %}
+
   <script type="text/javascript">
     document.getElementById('send-answer').addEventListener('click', () => {
       const correctAnswer = document.getElementById('correct-answer').value;
       const form = document.forms.answerForm;
 
       if (correctAnswer === form.answer.value) {
-        fetch(`${location.pathname}/correct`, {method: 'POST'});
+        fetch(`${location.pathname}/correct`, {method: 'POST'})
         document.getElementById('pass-fail').innerHTML = "OK";
       } else {
         document.getElementById('pass-fail').innerHTML = "NG";
@@ -54,6 +64,11 @@
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({program})
       })
+    })
+
+    document.getElementById('send-help').addEventListener('click', () => {
+      fetch(`${location.pathname}/help`, {method: 'POST'})
+      .then(() => location.reload());
     })
   </script>
 </body>

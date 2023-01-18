@@ -31,7 +31,7 @@
   (try
   	(if (= "new" (:id path-params))
   	    (models.question/insert! params)
-  	    (models.question/update! params))
+  	    (models.question/update! params path-params))
     (redirect "/admin/questions")
     (catch Exception _
       (redirect "/login"))))

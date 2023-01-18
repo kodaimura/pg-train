@@ -3,46 +3,13 @@
     [next.jdbc.sql :as sql]
     [pg-train.db :refer [db]]))
 
-
 (defn insert!
-  [question]
-  (let [sql [
-         "insert into questions (
-            title,
-            statement, 
-            hint, 
-            answer, 
-            level
-          ) values (?, ?, ?, ?, ?)"
-         (:title question)
-         (:statement question)
-         (:hint question)
-         (:answer question)
-         (:level question)]]
-     (sql/query db sql)))
+  [key-map]
+  (sql/insert! db :questions key-map))
 
 (defn update!
-  [question]
-  (let [sql [
-         "update questions
-          set
-            title = ?,
-            statement = ?,
-            hint = ?,
-            answer = ?,
-            level = ?,
-            classifying_id = ?,
-            del_flg = ?
-          where id = ?"
-         (:title question)
-         (:statement question)
-         (:hint question)
-         (:answer question)
-         (:level question)
-         (:classifying_id question)
-         (:del_flg question)
-         (:id question)]]
-     (sql/query db sql)))
+  [key-map where-params]
+  (sql/update! db :questions key-map where-params))
 
 (defn select-by-id
   [id]

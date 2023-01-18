@@ -5,14 +5,12 @@
 
 
 (defn insert!
-  [user]
-  (let [sql [
-         "insert into users (
-           username, password
-         ) values (?, ?)"
-         (:username user)
-         (:password user)]]
-     (sql/query db sql)))
+  [key-map]
+  (sql/insert! db :users key-map))
+
+(defn update!
+  [key-map where-params]
+  (sql/update! db :users key-map where-params))
 
 (defn select-by-username
   [username]

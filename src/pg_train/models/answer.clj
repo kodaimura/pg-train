@@ -5,41 +5,12 @@
 
 
 (defn insert!
-  [answer]
-  (let [sql [
-         "insert into answers (
-            question_id,
-            user_id,
-            correct_flg,
-            program,
-            help_flg,
-            advice
-          ) values (?,?,?,?,?,?)"
-         (:question_id answer)
-         (:user_id answer)
-         (:correct_flg answer)
-         (:program answer)
-         (:help_flg answer)
-         (:advice answer)]]
-     (sql/query db sql)))
+  [key-map]
+  (sql/insert! db :answers key-map))
 
 (defn update!
-  [answer]
-  (let [sql [
-         "update answers
-          set
-            correct_flg = ?,
-            program = ?,
-            help_flg = ?,
-            advice = ?
-		      where question_id = ? and user_id = ?"
-         (:correct_flg answer)
-         (:program answer)
-         (:help_flg answer)
-         (:advice answer)
-         (:question_id answer)
-         (:user_id answer)]]
-     (sql/query db sql)))
+  [key-map where-params]
+  (sql/update! db :answers key-map where-params))
 
 (defn upsert!
   [answer]
@@ -66,10 +37,10 @@
          (:program answer)
          (:help_flg answer)
          (:advice answer)
-         (:correct_flg answer)
-         (:program answer)
-         (:help_flg answer)
-         (:advice answer)]]
+         (or (:correct_flg answer) (:answers/correct_flg answer))
+         (or (:program answer) (:answers/program answer))
+         (or (:help_flg answer) (:answers/help_flg answer))
+         (or (:advice answer) (:answers/advice answer))]]
      (sql/query db sql)))
 
 (defn select-by-user_id

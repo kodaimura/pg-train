@@ -31,25 +31,27 @@
                         {:question (first question) :answer (first answer)})))))
 
 (defn answer-init
-  [question_id user_id]
+  [question_id user_id & 
+   {:keys [correct_flg program help_flg advice]
+  	:or {correct_flg "0" program "" help_flg "0" advice ""}}]
   {:question_id question_id
    :user_id user_id
-   :correct_flg "0"
-   :program ""
-   :help_flg "0"
-   :advice ""})
+   :correct_flg correct_flg
+   :program program
+   :help_flg help_flg
+   :advice advice})
 
 (defn register-correct_flg!
   [req]
   (let [question_id (get-in req [:path-params :id])
         user_id (jwt/payload-id req)
-        answer (models.answer/select-by-question_id_and_user_id question_id user_id)
-        answer* (if (empty? answer) 
-                    (answer-init question_id user_id) 
-                    (first answer))]
+        answer (models.answer/select-by-question_id_and_user_id question_id user_id)]
     (try
-      (models.answer/upsert! (assoc (dissoc answer* :correct_flg)
-                                    :correct_flg "1"))
+      (if (empty? answer)
+          (models.answer/insert! 
+            (answer-init question_id user_id {:correct_flg "1"}))
+          (models.answer/update!
+            {:correct_flg "1"} {:question_id question_id :user_id user_id}))
       (status 200)
       (catch Exception _
         (redirect "/login")))))
@@ -73,13 +75,14 @@
   [req]
   (let [question_id (get-in req [:path-params :id])
         user_id (jwt/payload-id req)
-        answer (models.answer/select-by-question_id_and_user_id question_id user_id)
-        answer* (if (empty? answer) 
-                    (answer-init question_id user_id) 
-                    (first answer))]
+        program (get-in req [:params :program])
+        answer (models.answer/select-by-question_id_and_user_id question_id user_id)]
     (try
-      (models.answer/upsert! (assoc (dissoc answer* :program)
-                                    :program (get-in req [:params :program])))
+      (if (empty? answer)
+          (models.answer/insert! 
+            (answer-init question_id user_id {:program program}))
+          (models.answer/update!
+            {:program program} {:question_id question_id :user_id user_id}))
       (status 200)
       (catch Exception _
         (redirect "/login")))))

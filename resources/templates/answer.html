@@ -28,9 +28,9 @@
   </form>
   {% endif %}
 
-  <form method="post">
-    <input type="hidden" name="question_id" value="{{question.questions/id}}">
-    <input type="text">
+  <form name="programForm" onsubmit="return false">
+    <textarea name="program" rows="10" cols="50">{{answer.answers/program}}</textarea>
+    <input type="submit" id="send-program" value="send">
   </form>
 
   <script type="text/javascript">
@@ -44,7 +44,16 @@
       } else {
         document.getElementById('pass-fail').innerHTML = "NG";
       }
-      
+    })
+
+    document.getElementById('send-program').addEventListener('click', () => {
+      const program = document.forms.programForm.program.value;
+
+      fetch(`${location.pathname}/program`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({program})
+      })
     })
   </script>
 </body>

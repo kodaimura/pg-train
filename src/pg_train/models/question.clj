@@ -3,6 +3,7 @@
     [next.jdbc.sql :as sql]
     [pg-train.db :refer [db]]))
 
+
 (defn insert!
   [key-map]
   (sql/insert! db :questions key-map))

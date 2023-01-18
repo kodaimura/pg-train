@@ -46,3 +46,21 @@
           question_id
           user_id]]
     (sql/query db sql)))
+
+(defn select-helps
+  []
+  (let [sql [
+         "select
+            a.question_id,
+            a.user_id,
+            u.username,
+            a.program,
+            a.advice,
+            q.title,
+            q.answer
+          from answers as a, questions as q, users as u
+          where a.question_id = q.id
+            and a.user_id = u.id
+            and a.help_flg = '1'
+            and q.del_flg = '0'"]]
+    (sql/query db sql)))

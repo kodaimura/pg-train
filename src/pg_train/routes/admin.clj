@@ -3,7 +3,8 @@
     [ring.util.response :refer [response redirect status]]
     [pg-train.jwt :as jwt]
     [pg-train.template :as template]
-    [pg-train.models.question :as models.question]))
+    [pg-train.models.question :as models.question]
+    [pg-train.models.answer :as models.answer]))
 
 
 (defn admin-page
@@ -15,6 +16,12 @@
   (let [questions (models.question/select-all-admin)]
     (response (template/render "admin-questions.html"
                 {:questions questions}))))
+
+(defn helps-page
+  [req]
+  (let [helps (models.answer/select-helps)]
+    (response (template/render "admin-helps.html"
+                {:helps helps}))))
 
 (defn question-page
   [{:keys [path-params]}]
@@ -52,4 +59,5 @@
    ["/questions" {:get questions-page}]
    ; :id が new の時は新規登録
    ["/questions/:id" {:get question-page
-   	                  :post register-question!}]])
+   	                  :post register-question!}]
+   ["/helps" {:get helps-page}]])

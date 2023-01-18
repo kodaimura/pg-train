@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% style "/css/style.css" %}
+  <title>helps</title>
+</head>
+<body>
+  <table>
+    <thead>
+    <tr>
+      <th>user_id</th>
+      <th>name</th>
+      <th>question_id</th>
+      <th>title</th>
+      <th>answer</th>
+      <th>program</th>
+      <th>advice</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for h in helps %}
+      <tr>
+        <td>{{h.answers/user_id}}</td>
+        <td>{{h.users/username}}</td>
+        <td>{{h.answers/question_id}}</td>
+        <td>{{h.questions/title}}</td>
+        <td>{{h.questions/answer}}</td>
+        <td>{% if h.answers/program|count-is:0 %}×{% else %}○{% endif %}</td>
+        <td>{% if h.answers/advice|count-is:0 %}{% else %}○{% endif %}</td>
+        <td><a href="">書込</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <a href="questions/new">追加</a>
+</body>
+</html>

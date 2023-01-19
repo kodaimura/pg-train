@@ -12,6 +12,15 @@
   [key-map where-params]
   (sql/update! db :questions key-map where-params))
 
+(defn inc-respondents!
+  [id]
+  (let [sql [
+         "update questions 
+          set respondents = respondents + 1
+          where id = ?"
+          id]]
+    (sql/query db sql)))
+
 (defn select-by-id
   [id]
   (let [sql [

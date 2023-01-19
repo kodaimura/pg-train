@@ -52,6 +52,7 @@
             (answer-init question_id user_id {:correct_flg "1"}))
           (models.answer/update!
             {:correct_flg "1"} {:question_id question_id :user_id user_id}))
+      (models.question/inc-respondents! question_id)
       (status 200)
       (catch Exception _
         (status 500)))))

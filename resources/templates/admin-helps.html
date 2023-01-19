@@ -17,7 +17,7 @@
       <th>title</th>
       <th>answer</th>
       <th>program</th>
-      <th>advice</th>
+      <th>comment</th>
       <th></th>
     </tr>
     </thead>
@@ -30,7 +30,7 @@
         <td>{{h.questions/title}}</td>
         <td>{{h.questions/answer}}</td>
         <td>{% if h.answers/program|count-is:0 %}×{% else %}○{% endif %}</td>
-        <td>{% if h.answers/advice|count-is:0 %}{% else %}○{% endif %}</td>
+        <td>{% if h.answers/comment|count-is:0 %}{% else %}○{% endif %}</td>
         <td><a href="">書込</a></td>
       </tr>
     {% endfor %}

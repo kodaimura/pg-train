@@ -21,7 +21,7 @@
             correct_flg,
             program,
             help_flg,
-            advice,
+            comment,
             create_at,
             update_at
           from answers
@@ -38,7 +38,7 @@
             correct_flg,
             program,
             help_flg,
-            advice,
+            comment,
             create_at,
             update_at
           from answers
@@ -55,7 +55,7 @@
             a.user_id,
             u.username,
             a.program,
-            a.advice,
+            a.comment,
             q.title,
             q.answer
           from answers as a, questions as q, users as u

@@ -32,14 +32,14 @@
 
 (defn answer-init
   [question_id user_id & 
-   {:keys [correct_flg program help_flg advice]
-  	:or {correct_flg "0" program "" help_flg "0" advice ""}}]
+   {:keys [correct_flg program help_flg comment]
+  	:or {correct_flg "0" program "" help_flg "0" comment ""}}]
   {:question_id question_id
    :user_id user_id
    :correct_flg correct_flg
    :program program
    :help_flg help_flg
-   :advice advice})
+   :comment comment})
 
 (defn register-correct_flg!
   [req]

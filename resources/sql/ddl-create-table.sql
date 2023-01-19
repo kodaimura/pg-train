@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS answers (
 	correct_flg TEXT NOT NULL DEFAULT '0',
 	program TEXT,
 	help_flg TEXT NOT NULL DEFAULT '0',
-	advice TEXT,
+	comment TEXT,
 	create_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
 	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
 	PRIMARY KEY(user_id, question_id)

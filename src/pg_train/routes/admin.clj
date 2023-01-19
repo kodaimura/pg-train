@@ -23,6 +23,16 @@
     (response (template/render "admin-helps.html"
                 {:helps helps}))))
 
+(defn comment-page
+  [{:keys [path-params]}]
+  (let [answer (models.answer/select-by-question_id_and_user_id
+                (:question_id path-params) (:user_id path-params))
+        question (models.question/select-by-id (:question_id path-params))]
+    (if (or (empty? answer) (empty? question))
+        (redirect "/login")
+        (response (template/render "admin-comment.html"
+                    {:answer (first answer) :question (first question)})))))
+
 (defn question-page
   [{:keys [path-params]}]
   (if (= "new" (:id path-params))
@@ -43,6 +53,22 @@
     (catch Exception _
       (redirect "/login"))))
 
+(defn register-comment!
+  [{:keys [path-params params]}]
+  (try
+  	(models.answer/update! params path-params)
+    (status 200)
+    (catch Exception _
+      (status 500))))
+
+(defn settled!
+  [{:keys [path-params]}]
+  (try
+  	(models.answer/update! {:help_flg "0"} path-params)
+    (status 200)
+    (catch Exception _
+      (status 500))))
+
 (defn wrap-admin
   [handler]
   (fn [request]
@@ -60,4 +86,7 @@
    ; :id が new の時は新規登録
    ["/questions/:id" {:get question-page
    	                  :post register-question!}]
-   ["/helps" {:get helps-page}]])
+   ["/helps" {:get helps-page}]
+   ["/helps/:question_id/:user_id" {:get comment-page}]
+   ["/helps/:question_id/:user_id/comment" {:post register-comment!}]
+   ["/helps/:question_id/:user_id/settled" {:post settled!}]])

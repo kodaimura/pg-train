@@ -31,7 +31,9 @@
         <td>{{h.questions/answer}}</td>
         <td>{% if h.answers/program|count-is:0 %}×{% else %}○{% endif %}</td>
         <td>{% if h.answers/comment|count-is:0 %}{% else %}○{% endif %}</td>
-        <td><a href="">書込</a></td>
+        <td>
+          <a href="helps/{{h.answers/question_id}}/{{h.answers/user_id}}">comment</a>
+       </td>
       </tr>
     {% endfor %}
     </tbody>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% style "/css/style.css" %}
+  <title>comment</title>
+</head>
+<body>
+  <p>{{question.questions/id}}</p>
+  <p>{{question.questions/title}}</p>
+  <p>{{question.questions/statement}}</p>
+  <p>{{answer.answers/program}}</p>
+
+  <p id="error"></p>
+  <form name="commentForm" method="post" onsubmit="return false">
+    <textarea name="comment" rows="10" cols="30">{{answer.answers/comment}}</textarea>
+    <input type="submit" id="send-comment" value="send">
+  </form>
+
+  <form onsubmit="return false">
+    <input type="button" id="send-settled" value="settled">
+  </form>
+
+  <script type="text/javascript">
+    document.getElementById('send-comment').addEventListener('click', () => {
+      const comment = document.forms.commentForm.comment.value;
+
+      fetch(`${location.pathname}/comment`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({comment})
+      }).then(response => {
+        document.getElementById('error').innerHTML = (response.ok)? "saved" : "error";
+      });
+    })
+
+    document.getElementById('send-settled').addEventListener('click', () => {
+      fetch(`${location.pathname}/settled`, {method: 'POST'})
+      .then(() => {document.location = '/admin/helps'});
+    })
+  </script>
+</body>
+</html>

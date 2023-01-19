@@ -75,7 +75,7 @@
     (let [name (jwt/payload-username request)]
       (if (= name "admin") 
           (handler request)
-          (redirect "/home")))))
+          (redirect "/")))))
 
 (def admin-routes
   ["/admin"

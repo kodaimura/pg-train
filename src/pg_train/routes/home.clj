@@ -48,7 +48,7 @@
         answer (models.answer/select-by-question_id_and_user_id question_id user_id)]
     (try
       (if (empty? answer)
-          (models.answer/insert! 
+          (models.answer/insert!
             (answer-init question_id user_id {:correct_flg "1"}))
           (models.answer/update!
             {:correct_flg "1"} {:question_id question_id :user_id user_id}))
@@ -97,10 +97,10 @@
           (handler request)))))
 
 (def home-routes
-  ["/home"
+  [""
    {:middleware [jwt/wrap-jwt-authentication
    	             wrap-home]}
-   ["" {:get home-page}]
+   ["/" {:get home-page}]
    ["/questions" {:get questions-page}]
    ["/questions/:id" {:get answer-page}]
    ["/questions/:id/correct" {:post register-correct_flg!}]

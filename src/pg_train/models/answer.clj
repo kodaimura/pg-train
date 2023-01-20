@@ -21,6 +21,7 @@
             correct_flg,
             program,
             help_flg,
+            reaction_flg,
             comment,
             create_at,
             update_at
@@ -38,6 +39,7 @@
             correct_flg,
             program,
             help_flg,
+            reaction_flg,
             comment,
             create_at,
             update_at

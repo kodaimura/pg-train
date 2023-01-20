@@ -39,6 +39,7 @@
    :correct_flg correct_flg
    :program program
    :help_flg help_flg
+   :reaction_flg "0"
    :comment comment})
 
 (defn register-correct_flg!

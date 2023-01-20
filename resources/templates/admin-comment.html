@@ -19,9 +19,25 @@
     <input type="submit" id="send-comment" value="send">
   </form>
 
+  {% if answer.answers/help_flg = "1" %}
   <form onsubmit="return false">
     <input type="button" id="send-settled" value="settled">
   </form>
+  {% else %}
+  <form onsubmit="return false">
+    <input type="button" id="send-settled" value="settled" disabled>
+  </form>
+  {% endif %}
+
+  {% if answer.answers/reaction_flg = "0" and answer.answers/correct_flg = "1" %}
+  <form onsubmit="return false">
+    <input type="button" id="send-reaction" value="reaction">
+  </form>
+  {% else %}
+  <form onsubmit="return false">
+    <input type="button" id="send-reaction" value="reaction" disabled>
+  </form>
+  {% endif %}
 
   <script type="text/javascript">
     document.getElementById('send-comment').addEventListener('click', () => {
@@ -38,6 +54,11 @@
 
     document.getElementById('send-settled').addEventListener('click', () => {
       fetch(`${location.pathname}/settled`, {method: 'POST'})
+      .then(() => {document.location = '/admin/helps'});
+    })
+
+    document.getElementById('send-reaction').addEventListener('click', () => {
+      fetch(`${location.pathname}/reaction`, {method: 'POST'})
       .then(() => {document.location = '/admin/helps'});
     })
   </script>

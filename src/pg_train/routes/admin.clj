@@ -30,7 +30,7 @@
         question (models.question/select-by-id (:question_id path-params))]
     (if (or (empty? answer) (empty? question))
         (redirect "/login")
-        (response (template/render "admin-comment.html"
+        (response (template/render "admin-helps.html"
                     {:answer (first answer) :question (first question)})))))
 
 (defn question-page
@@ -69,6 +69,14 @@
     (catch Exception _
       (status 500))))
 
+(defn reaction!
+  [{:keys [path-params]}]
+  (try
+    (models.answer/update! {:reaction_flg "0"} path-params)
+    (status 200)
+    (catch Exception _
+      (status 500))))
+
 (defn wrap-admin
   [handler]
   (fn [request]
@@ -89,4 +97,5 @@
    ["/helps" {:get helps-page}]
    ["/helps/:question_id/:user_id" {:get comment-page}]
    ["/helps/:question_id/:user_id/comment" {:post register-comment!}]
-   ["/helps/:question_id/:user_id/settled" {:post settled!}]])
+   ["/helps/:question_id/:user_id/settled" {:post settled!}]
+   ["/helps/:question_id/:user_id/reaction" {:post reaction!}]])

@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS questions (
 	level INTEGER,
 	respondents INTEGER NOT NULL DEFAULT 0,
 	classifying_id TEXT NOT NULL DEFAULT '00',
-	del_flg TEXT NOT NULL DEFAULT '0',
+	del_flg CHAR(1) NOT NULL DEFAULT '0',
 	create_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
 	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime'))
 );
@@ -23,9 +23,10 @@ CREATE TABLE IF NOT EXISTS questions (
 CREATE TABLE IF NOT EXISTS answers (
 	user_id INTEGER,
 	question_id INTEGER,
-	correct_flg TEXT NOT NULL DEFAULT '0',
+	correct_flg CHAR(1) NOT NULL DEFAULT '0',
 	program TEXT,
-	help_flg TEXT NOT NULL DEFAULT '0',
+	help_flg CHAR(1) NOT NULL DEFAULT '0',
+	reaction_flg CHAR(1) NOT NULL DEFAULT '0',
 	comment TEXT,
 	create_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
 	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),

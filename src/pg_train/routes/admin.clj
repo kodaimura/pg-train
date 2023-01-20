@@ -30,7 +30,7 @@
         question (models.question/select-by-id (:question_id path-params))]
     (if (or (empty? answer) (empty? question))
         (redirect "/login")
-        (response (template/render "admin-helps.html"
+        (response (template/render "admin-comment.html"
                     {:answer (first answer) :question (first question)})))))
 
 (defn question-page
@@ -72,7 +72,7 @@
 (defn reaction!
   [{:keys [path-params]}]
   (try
-    (models.answer/update! {:reaction_flg "0"} path-params)
+    (models.answer/update! {:reaction_flg "1"} path-params)
     (status 200)
     (catch Exception _
       (status 500))))

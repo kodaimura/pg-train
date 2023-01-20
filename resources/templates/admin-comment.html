@@ -29,16 +29,20 @@
   </form>
   {% endif %}
 
-  {% if answer.answers/reaction_flg = "0" and answer.answers/correct_flg = "1" %}
-  <form onsubmit="return false">
-    <input type="button" id="send-reaction" value="reaction">
-  </form>
-  {% else %}
+  {% if answer.answers/reaction_flg = "1" %}
   <form onsubmit="return false">
     <input type="button" id="send-reaction" value="reaction" disabled>
   </form>
+  {% elif answer.answers/correct_flg = "0" %}
+  <form onsubmit="return false">
+    <input type="button" id="send-reaction" value="reaction" disabled>
+  </form>
+  {% else %}
+  <form onsubmit="return false">
+    <input type="button" id="send-reaction" value="reaction">
+  </form>
   {% endif %}
-
+  
   <script type="text/javascript">
     document.getElementById('send-comment').addEventListener('click', () => {
       const comment = document.forms.commentForm.comment.value;

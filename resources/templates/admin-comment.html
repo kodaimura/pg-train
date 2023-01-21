@@ -43,7 +43,7 @@
   </form>
   {% endif %}
 
-  <a href="/admin/answers">戻る</button>
+  <a href="/admin/answers">戻る</a>
   
   <script type="text/javascript">
     document.getElementById('send-comment').addEventListener('click', () => {
@@ -60,12 +60,18 @@
 
     document.getElementById('send-settled').addEventListener('click', () => {
       fetch(`${location.pathname}/settled`, {method: 'POST'})
-      .then(() => {window.location.reload});
+      .then((response) => {
+        console.log(response)
+        window.location.reload();
+      });
     })
 
     document.getElementById('send-reaction').addEventListener('click', () => {
       fetch(`${location.pathname}/reaction`, {method: 'POST'})
-      .then(() => {window.location.reload});
+      .then((response) => {
+        console.log(response)
+        window.location.reload();
+      });
     })
   </script>
 </body>

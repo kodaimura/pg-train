@@ -17,11 +17,12 @@
     (response (template/render "admin-questions.html"
                 {:questions questions}))))
 
-(defn helps-page
-  [req]
-  (let [helps (models.answer/select-helps)]
-    (response (template/render "admin-helps.html"
-                {:helps helps}))))
+(defn answers-page
+  [{:keys [query-params]}]
+  (println query-params)
+  (let [answers (models.answer/select-uqa query-params)]
+    (response (template/render "admin-answers.html"
+                {:answers answers}))))
 
 (defn comment-page
   [{:keys [path-params]}]
@@ -85,6 +86,7 @@
           (handler request)
           (redirect "/")))))
 
+
 (def admin-routes
   ["/admin"
    {:middleware [jwt/wrap-jwt-authentication 
@@ -94,8 +96,8 @@
    ; :id が new の時は新規登録
    ["/questions/:id" {:get question-page
    	                  :post register-question!}]
-   ["/helps" {:get helps-page}]
-   ["/helps/:question_id/:user_id" {:get comment-page}]
-   ["/helps/:question_id/:user_id/comment" {:post register-comment!}]
-   ["/helps/:question_id/:user_id/settled" {:post settled!}]
-   ["/helps/:question_id/:user_id/reaction" {:post reaction!}]])
+   ["/answers" {:get answers-page}]
+   ["/answers/:question_id/:user_id" {:get comment-page}]
+   ["/answers/:question_id/:user_id/comment" {:post register-comment!}]
+   ["/answers/:question_id/:user_id/settled" {:post settled!}]
+   ["/answers/:question_id/:user_id/reaction" {:post reaction!}]])

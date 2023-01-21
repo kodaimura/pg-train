@@ -49,20 +49,36 @@
           user_id]]
     (sql/query db sql)))
 
-(defn select-helps
-  []
-  (let [sql [
-         "select
-            a.question_id,
-            a.user_id,
-            u.username,
-            a.program,
-            a.comment,
-            q.title,
-            q.answer
-          from answers as a, questions as q, users as u
-          where a.question_id = q.id
-            and a.user_id = u.id
-            and a.help_flg = '1'
-            and q.del_flg = '0'"]]
+(defn select-uqa
+  [params]
+  (let [sql 
+        (remove nil?
+          [(str
+            "select
+               a.question_id,
+               a.user_id,
+               u.username,
+               a.correct_flg,
+               a.program,
+               a.help_flg,
+               a.reaction_flg,
+               a.comment,
+               q.title,
+               q.answer,
+               q.level, 
+               q.respondents
+             from answers as a, questions as q, users as u
+             where a.question_id = q.id
+               and a.user_id = u.id
+               and q.del_flg = '0'"
+             (if (:user_id params) "and a.user_id = ?" "")
+             (if (:question_id params) "and a.question_id = ?" "")
+             (if (:help_flg params) "and a.help_flg = '?'" "")
+             (if (:correct_flg params) "and a.correct_flg = '?'" "")
+             (if (:reaction_flg params) "and a.reaction_flg = '?'" ""))
+            (:user_id params)
+            (:question_id params)
+            (:correct_flg params)
+            (:reaction_flg params)])]
+    (println sql)
     (sql/query db sql)))

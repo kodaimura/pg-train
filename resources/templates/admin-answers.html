@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% style "/css/style.css" %}
+  <title>answers</title>
+</head>
+<body>
+  <table>
+    <thead>
+    <tr>
+      <th>user_id</th>
+      <th>name</th>
+      <th>question_id</th>
+      <th>title</th>
+      <th>he</th>
+      <th>cm</th>
+      <th>co</th>
+      <th>re</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for a in answers %}
+      <tr>
+        <td>{{a.answers/user_id}}</td>
+        <td>{{a.users/username}}</td>
+        <td>{{a.answers/question_id}}</td>
+        <td>{{a.questions/title}}</td>
+        <td>{% if a.answers/help_flg = "0" %}-{% else %}○{% endif %}</td>
+        <td>{% if a.answers/comment|count-is:0 %}-{% else %}○{% endif %}</td>
+        <td>{% if a.answers/correct_flg = "0" %}-{% else %}○{% endif %}</td>
+        <td>{% if a.answers/reaction_flg = "0" %}-{% else %}○{% endif %}</td>
+        <td>
+          <a href="answers/{{a.answers/question_id}}/{{a.answers/user_id}}">comment</a>
+       </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

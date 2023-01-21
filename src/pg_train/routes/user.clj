@@ -27,17 +27,18 @@
                  :cookies {"token" {:value token}}))
         (status 401))))
 
-(defn signup-page
-  [req]
-  (response (template/render "signup.html" {})))
 
-(defn signup-post
-  [{:keys [params]}]
-  (try (models.user/insert! (assoc (dissoc params :password)
-                                   :password (hashers/derive (:password params))))
-    (redirect "/login")
-    (catch Exception _
-      (redirect "/signup"))))
+;(defn signup-page
+;  [req]
+;  (response (template/render "signup.html" {})))
+
+;(defn signup-post
+;  [{:keys [params]}]
+;  (try (models.user/insert! (assoc (dissoc params :password)
+;                                   :password (hashers/derive (:password params))))
+;    (redirect "/login")
+;    (catch Exception _
+;      (redirect "/signup"))))
 
 (defn logout
   [req]
@@ -54,8 +55,8 @@
    {:middleware []}
    ["/login" {:get login-page
    	          :post login-post}]
-   ["/signup" {:get signup-page
-   	           :post signup-post}]
+   ;["/signup" {:get signup-page
+   ;	           :post signup-post}]
    ["/logout" {:get logout}]])
 
 (def user-routes

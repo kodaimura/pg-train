@@ -1,10 +1,12 @@
 (ns pg-train.routes.admin
   (:require
     [ring.util.response :refer [response redirect status]]
+    [buddy.hashers :as hashers]
     [pg-train.jwt :as jwt]
     [pg-train.template :as template]
     [pg-train.models.question :as models.question]
-    [pg-train.models.answer :as models.answer]))
+    [pg-train.models.answer :as models.answer]
+    [pg-train.models.user :as models.user]))
 
 
 (defn admin-page
@@ -22,6 +24,12 @@
   (let [answers (models.answer/select-uqa params)]
     (response (template/render "admin-answers.html"
                 {:answers answers}))))
+
+(defn users-page
+  [req]
+  (let [users (models.user/select-all)]
+    (response (template/render "admin-users.html"
+                {:users users}))))
 
 (defn comment-page
   [{:keys [path-params]}]
@@ -77,6 +85,18 @@
     (catch Exception _
       (status 500))))
 
+(defn signup-page
+  [req]
+  (response (template/render "signup.html" {})))
+
+(defn register-user!
+  [{:keys [params]}]
+  (try (models.user/insert! (assoc (dissoc params :password)
+                                   :password (hashers/derive (:password params))))
+    (redirect "/admin/users")
+    (catch Exception _
+      (status 500))))
+
 (defn wrap-admin
   [handler]
   (fn [request]
@@ -98,4 +118,7 @@
    ["/answers/:question_id/:user_id" {:get comment-page}]
    ["/answers/:question_id/:user_id/comment" {:post register-comment!}]
    ["/answers/:question_id/:user_id/settled" {:post settled!}]
-   ["/answers/:question_id/:user_id/reaction" {:post reaction!}]])
+   ["/answers/:question_id/:user_id/reaction" {:post reaction!}]
+   ["/users" {:get users-page}]
+   ["/users/new" {:get signup-page
+   	              :post register-user!}]])

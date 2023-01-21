@@ -20,3 +20,11 @@
           where username = ?"
           username]]
     (sql/query db sql)))
+
+(defn select-all
+  []
+  (let [sql [
+         "select id, username, create_at 
+          from users
+          where username != 'admin'"]]
+    (sql/query db sql)))

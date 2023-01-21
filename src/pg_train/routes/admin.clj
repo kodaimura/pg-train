@@ -18,9 +18,8 @@
                 {:questions questions}))))
 
 (defn answers-page
-  [{:keys [query-params]}]
-  (println query-params)
-  (let [answers (models.answer/select-uqa query-params)]
+  [{:keys [params]}]
+  (let [answers (models.answer/select-uqa params)]
     (response (template/render "admin-answers.html"
                 {:answers answers}))))
 
@@ -85,7 +84,6 @@
       (if (= name "admin") 
           (handler request)
           (redirect "/")))))
-
 
 (def admin-routes
   ["/admin"

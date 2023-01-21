@@ -71,14 +71,14 @@
              where a.question_id = q.id
                and a.user_id = u.id
                and q.del_flg = '0'"
-             (if (:user_id params) "and a.user_id = ?" "")
-             (if (:question_id params) "and a.question_id = ?" "")
-             (if (:help_flg params) "and a.help_flg = '?'" "")
-             (if (:correct_flg params) "and a.correct_flg = '?'" "")
-             (if (:reaction_flg params) "and a.reaction_flg = '?'" ""))
+             (if (:user_id params) " and a.user_id = ?" "")
+             (if (:question_id params) " and a.question_id = ?" "")
+             (if (:help_flg params) " and a.help_flg = ?" "")
+             (if (:correct_flg params) " and a.correct_flg = ?" "")
+             (if (:reaction_flg params) " and a.reaction_flg = ?" ""))
             (:user_id params)
             (:question_id params)
+            (:help_flg params)
             (:correct_flg params)
             (:reaction_flg params)])]
-    (println sql)
     (sql/query db sql)))

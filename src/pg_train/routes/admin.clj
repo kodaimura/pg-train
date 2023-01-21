@@ -91,11 +91,14 @@
 
 (defn register-user!
   [{:keys [params]}]
-  (try (models.user/insert! (assoc (dissoc params :password)
-                                   :password (hashers/derive (:password params))))
-    (redirect "/admin/users")
-    (catch Exception _
-      (status 500))))
+  (let [user (models.user/select-by-username (:username params))]
+    (if (empty? user)
+        (try (models.user/insert! (assoc (dissoc params :password)
+                                    :password (hashers/derive (:password params))))
+          (status 200)
+          (catch Exception _
+            (status 500)))
+        (status 409))))
 
 (defn wrap-admin
   [handler]

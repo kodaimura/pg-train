@@ -8,10 +8,45 @@
   <title>signup</title>
 </head>
 <body>
-  <form method="post">
+  <p id="error"></p>
+  <form name="signupForm" onsubmit="return false">
     <input type="text" name="username">
     <input type="password" name="password">
-    <input type="submit" value="signup">
+    <input type="password" name="password2">
+    <input type="button" id="send" value="signup">
   </form>
+
+  <script type="text/javascript">
+    document.getElementById('send').addEventListener('click', () => {
+      const form = document.forms.signupForm;
+      const username = form.username.value;
+      const password = form.password.value;
+      const password2 = form.password2.value;
+
+      if (password !== password2) {
+        document.getElementById("error").innerHTML = "パスワードが一致しません。"
+      } else {
+        fetch(location.pathname, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({username, password})
+        })
+        .then(response => {
+          if (!response.ok) {
+            if (response.status == 409) {
+              document.getElementById("error").innerHTML = "アカウント名が既に使われています。"
+            } else {
+              document.getElementById("error").innerHTML = "登録に失敗しました。"
+            }
+            throw new Error(response.statusText);
+            
+          } else {
+            document.location.href = "/admin/users";
+          }
+        })
+        .catch(console.error);
+      }
+    })
+  </script>
 </body>
 </html>

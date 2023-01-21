@@ -8,6 +8,7 @@
   <title>login</title>
 </head>
 <body>
+  <p id="error"></p>
   <form name="loginForm" onsubmit="return false">
     <input type="text" name="username">
     <input type="password" name="password">
@@ -22,17 +23,16 @@
 
       fetch('login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({username, password})
       })
       .then(response => {
-        console.log(response)
         if (!response.ok) {
+          document.getElementById("error").innerHTML = "認証に失敗しました。"
           throw new Error(response.statusText);
+        } else {
+          document.location.href = "/";
         }
-        document.location.href = "/";
       })
       .catch(console.error);
     })

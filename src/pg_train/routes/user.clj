@@ -34,11 +34,14 @@
 
 ;(defn signup-post
 ;  [{:keys [params]}]
-;  (try (models.user/insert! (assoc (dissoc params :password)
-;                                   :password (hashers/derive (:password params))))
-;    (redirect "/login")
-;    (catch Exception _
-;      (redirect "/signup"))))
+;  (let [user (models.user/select-by-username (:username params))]
+;    (if (empty? user)
+;        (try (models.user/insert! (assoc (dissoc params :password)
+;                                    :password (hashers/derive (:password params))))
+;          (status 200)
+;          (catch Exception _
+;            (status 500)))
+;        (status 409))))
 
 (defn logout
   [req]

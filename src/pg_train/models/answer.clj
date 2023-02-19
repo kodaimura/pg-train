@@ -66,7 +66,7 @@
                q.title,
                q.answer,
                q.level, 
-               q.respondents
+               q.correct_count
              from answer as a, question as q, users as u
              where a.question_id = q.question_id
                and a.user_id = u.user_id

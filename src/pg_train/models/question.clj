@@ -12,12 +12,12 @@
   [key-map where-params]
   (sql/update! db :question key-map where-params))
 
-(defn inc-respondents!
+(defn inc-correctcount!
   [id]
   (let [sql [
          "update question 
-          set respondents = respondents + 1
-          where questio_id = ?"
+          set correct_count = correct_count + 1
+          where question_id = ?"
           id]]
     (sql/query db sql)))
 
@@ -30,7 +30,7 @@
             statement, 
             answer, 
             level, 
-            respondents, 
+            correct_count, 
             classifying_id, 
             del_flg
           from question
@@ -47,7 +47,7 @@
             statement, 
             answer, 
             level, 
-            respondents, 
+            correct_count, 
             classifying_id
           from question
           where del_flg = '0'"]]
@@ -62,7 +62,7 @@
             statement, 
             answer, 
             level, 
-            respondents, 
+            correct_count, 
             classifying_id, 
             del_flg
           from question"]]

@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS question (
 	statement TEXT NOT NULL,
 	answer TEXT NOT NULL,
 	level INTEGER,
-	respondents INTEGER NOT NULL DEFAULT 0,
+	correct_count INTEGER NOT NULL DEFAULT 0,
 	classifying_id TEXT NOT NULL DEFAULT '00',
 	del_flg CHAR(1) NOT NULL DEFAULT '0',
 	create_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),

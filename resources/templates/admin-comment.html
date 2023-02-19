@@ -8,18 +8,18 @@
   <title>comment</title>
 </head>
 <body>
-  <p>{{question.questions/id}}</p>
-  <p>{{question.questions/title}}</p>
-  <p>{{question.questions/statement}}</p>
-  <p>{{answer.answers/program}}</p>
+  <p>{{question.question/question_id}}</p>
+  <p>{{question.question/title}}</p>
+  <p>{{question.question/statement}}</p>
+  <p>{{answer.answer/program}}</p>
 
   <p id="error"></p>
   <form name="commentForm" method="post" onsubmit="return false">
-    <textarea name="comment" rows="10" cols="30">{{answer.answers/comment}}</textarea>
+    <textarea name="comment" rows="10" cols="30">{{answer.answer/comment}}</textarea>
     <input type="submit" id="send-comment" value="send">
   </form>
 
-  {% if answer.answers/help_flg = "1" %}
+  {% if answer.answer/help_flg = "1" %}
   <form onsubmit="return false">
     <input type="button" id="send-settled" value="settled">
   </form>
@@ -29,11 +29,11 @@
   </form>
   {% endif %}
 
-  {% if answer.answers/reaction_flg = "1" %}
+  {% if answer.answer/reaction_flg = "1" %}
   <form onsubmit="return false">
     <input type="button" id="send-reaction" value="reaction" disabled>
   </form>
-  {% elif answer.answers/correct_flg = "0" %}
+  {% elif answer.answer/correct_flg = "0" %}
   <form onsubmit="return false">
     <input type="button" id="send-reaction" value="reaction" disabled>
   </form>

@@ -21,10 +21,10 @@
     <tbody>
     {% for u in users %}
       <tr>
-        <td>{{u.users/id}}</td>
+        <td>{{u.users/user_id}}</td>
         <td>{{u.users/username}}</td>
         <td>{{u.users/create_at}}</td>
-        <td><a href="/admin/answers?user_id={{u.users/id}}">comment</a></td>
+        <td><a href="/admin/answers?user_id={{u.users/user_id}}">comment</a></td>
       </tr>
     {% endfor %}
     </tbody>

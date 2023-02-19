@@ -23,14 +23,14 @@
     <tbody>
     {% for q in questions %}
       <tr>
-        <td>{{q.questions/id}}</td>
-        <td>{{q.questions/title}}</td>
-        <td>{{q.questions/statement}}</td>
-        <td>{{q.questions/answer}}</td>
-        <td>{{q.questions/hint}}</td>
-        <td>{{q.questions/level}}</td>
-        <td>{{q.questions/respondents}}</td>
-        <td><a href="questions/{{q.questions/id}}">更新</a></td>
+        <td>{{q.question/question_id}}</td>
+        <td>{{q.question/title}}</td>
+        <td>{{q.question/statement}}</td>
+        <td>{{q.question/answer}}</td>
+        <td>{{q.question/hint}}</td>
+        <td>{{q.question/level}}</td>
+        <td>{{q.question/respondents}}</td>
+        <td><a href="questions/{{q.question/question_id}}">更新</a></td>
       </tr>
     {% endfor %}
     </tbody>

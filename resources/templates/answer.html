@@ -8,17 +8,17 @@
   <title>answer</title>
 </head>
 <body>
-  {{question.questions/id}}
-  {{question.questions/title}}
-  {{question.questions/statement}}
-  {{question.questions/level}}
-  {{answer.answers/comment}}
+  {{question.question/question_id}}
+  {{question.question/title}}
+  {{question.question/statement}}
+  {{question.question/level}}
+  {{answer.answer/comment}}
   
-  <input type="hidden" id="correct-answer" value="{{question.questions/answer}}">
+  <input type="hidden" id="correct-answer" value="{{question.question/answer}}">
   <p id="pass-fail"></p>
-  {% if answer.answers/correct_flg = "1" %}
+  {% if answer.answer/correct_flg = "1" %}
   <form name="answerForm" onsubmit="return false">
-    <input type="text" name="answer" value="{{question.questions/answer}}" disabled>
+    <input type="text" name="answer" value="{{question.question/answer}}" disabled>
     <input type="button" id="send-answer" value="send" disabled>
   </form>
   {% else %}
@@ -29,11 +29,11 @@
   {% endif %}
 
   <form name="programForm" onsubmit="return false">
-    <textarea name="program" rows="10" cols="50">{{answer.answers/program}}</textarea>
+    <textarea name="program" rows="10" cols="50">{{answer.answer/program}}</textarea>
     <input type="submit" id="send-program" value="send">
   </form>
 
-  {% if answer.answers/help_flg = "1" %}
+  {% if answer.answer/help_flg = "1" %}
   <form name="helpForm" onsubmit="return false">
     <input type="button" id="send-help" value="help" disabled>
   </form>

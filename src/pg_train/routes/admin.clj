@@ -15,27 +15,28 @@
 
 (defn questions-page
   [req]
-  (let [questions (models.question/select-all-admin)]
+  (let [questions (models.question/get-all-questions)]
     (response (template/render "admin-questions.html"
                 {:questions questions}))))
 
 (defn answers-page
   [{:keys [params]}]
-  (let [answers (models.answer/select-uqa params)]
+  (println params)
+  (let [answers (models.answer/get-qas params)]
     (response (template/render "admin-answers.html"
                 {:answers answers}))))
 
 (defn users-page
   [req]
-  (let [users (models.user/select-all)]
+  (let [users (models.user/get-users)]
     (response (template/render "admin-users.html"
                 {:users users}))))
 
 (defn comment-page
   [{:keys [path-params]}]
-  (let [answer (models.answer/select-by-question_id_and_user_id
+  (let [answer (models.answer/get-answer
                 (:question_id path-params) (:user_id path-params))
-        question (models.question/select-by-id (:question_id path-params))]
+        question (models.question/get-question (:question_id path-params))]
     (if (or (empty? answer) (empty? question))
         (redirect "/login")
         (response (template/render "admin-comment.html"
@@ -43,9 +44,9 @@
 
 (defn question-page
   [{:keys [path-params]}]
-  (if (= "new" (:id path-params))
+  (if (= "new" (:question_id path-params))
       (response (template/render "admin-question.html" {}))
-      (let [question (models.question/select-by-id (:id path-params))]
+      (let [question (models.question/get-question (:question_id path-params))]
         (if (empty? question)
             (response (template/render "admin-question.html" {}))
             (response (template/render "admin-question.html" 
@@ -54,7 +55,7 @@
 (defn register-question!
   [{:keys [path-params params]}]
   (try
-  	(if (= "new" (:id path-params))
+  	(if (= "new" (:question_id path-params))
   	    (models.question/insert! params)
   	    (models.question/update! params path-params))
     (redirect "/admin/questions")
@@ -91,7 +92,7 @@
 
 (defn register-user!
   [{:keys [params]}]
-  (let [user (models.user/select-by-username (:username params))]
+  (let [user (models.user/get-user-by-username (:username params))]
     (if (empty? user)
         (try (models.user/insert! (assoc (dissoc params :password)
                                     :password (hashers/derive (:password params))))
@@ -114,9 +115,9 @@
    	             wrap-admin]}
    ["" {:get admin-page}]
    ["/questions" {:get questions-page}]
-   ; :id が new の時は新規登録
-   ["/questions/:id" {:get question-page
-   	                  :post register-question!}]
+   ; :question_id が new の時は新規登録
+   ["/questions/:question_id" {:get question-page
+   	                           :post register-question!}]
    ["/answers" {:get answers-page}]
    ["/answers/:question_id/:user_id" {:get comment-page}]
    ["/answers/:question_id/:user_id/comment" {:post register-comment!}]

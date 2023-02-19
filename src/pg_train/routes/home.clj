@@ -13,16 +13,16 @@
 
 (defn questions-page
   [req]
-  (let [questions (models.question/select-all)]
+  (let [questions (models.question/get-valid-questions)]
     (response (template/render "questions.html"
                 {:questions questions}))))
 
 (defn answer-page
   [req]
-  (let [question_id (get-in req [:path-params :id])
+  (let [question_id (get-in req [:path-params :question_id])
         user_id (jwt/payload-id req)
-        question (models.question/select-by-id question_id)
-        answer (models.answer/select-by-question_id_and_user_id question_id user_id)]
+        question (models.question/get-question question_id)
+        answer (models.answer/get-answer question_id user_id)]
     (cond
       (empty? question) (redirect "/login")
       (empty? answer) (response (template/render "answer.html" 
@@ -44,9 +44,9 @@
 
 (defn register-correct_flg!
   [req]
-  (let [question_id (get-in req [:path-params :id])
+  (let [question_id (get-in req [:path-params :question_id])
         user_id (jwt/payload-id req)
-        answer (models.answer/select-by-question_id_and_user_id question_id user_id)]
+        answer (models.answer/get-answer question_id user_id)]
     (try
       (if (empty? answer)
           (models.answer/insert!
@@ -60,9 +60,9 @@
 
 (defn register-help_flg!
   [req]
-  (let [question_id (get-in req [:path-params :id])
+  (let [question_id (get-in req [:path-params :question_id])
         user_id (jwt/payload-id req)
-        answer (models.answer/select-by-question_id_and_user_id question_id user_id)]
+        answer (models.answer/get-answer question_id user_id)]
     (try
       (if (empty? answer)
           (models.answer/insert! 
@@ -75,10 +75,10 @@
 
 (defn register-program!
   [req]
-  (let [question_id (get-in req [:path-params :id])
+  (let [question_id (get-in req [:path-params :question_id])
         user_id (jwt/payload-id req)
         program (get-in req [:params :program])
-        answer (models.answer/select-by-question_id_and_user_id question_id user_id)]
+        answer (models.answer/get-answer question_id user_id)]
     (try
       (if (empty? answer)
           (models.answer/insert! 
@@ -103,7 +103,7 @@
    	             wrap-home]}
    ["/" {:get home-page}]
    ["/questions" {:get questions-page}]
-   ["/questions/:id" {:get answer-page}]
-   ["/questions/:id/correct" {:post register-correct_flg!}]
-   ["/questions/:id/help" {:post register-help_flg!}]
-   ["/questions/:id/program" {:post register-program!}]])
+   ["/questions/:question_id" {:get answer-page}]
+   ["/questions/:question_id/correct" {:post register-correct_flg!}]
+   ["/questions/:question_id/help" {:post register-help_flg!}]
+   ["/questions/:question_id/program" {:post register-program!}]])

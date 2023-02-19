@@ -25,16 +25,16 @@
     <tbody>
     {% for a in answers %}
       <tr>
-        <td>{{a.answers/user_id}}</td>
+        <td>{{a.answer/user_id}}</td>
         <td>{{a.users/username}}</td>
-        <td>{{a.answers/question_id}}</td>
-        <td>{{a.questions/title}}</td>
-        <td>{% if a.answers/help_flg = "0" %}-{% else %}○{% endif %}</td>
-        <td>{% if a.answers/comment|count-is:0 %}-{% else %}○{% endif %}</td>
-        <td>{% if a.answers/correct_flg = "0" %}-{% else %}○{% endif %}</td>
-        <td>{% if a.answers/reaction_flg = "0" %}-{% else %}○{% endif %}</td>
+        <td>{{a.answer/question_id}}</td>
+        <td>{{a.question/title}}</td>
+        <td>{% if a.answer/help_flg = "0" %}-{% else %}○{% endif %}</td>
+        <td>{% if a.answer/comment|count-is:0 %}-{% else %}○{% endif %}</td>
+        <td>{% if a.answer/correct_flg = "0" %}-{% else %}○{% endif %}</td>
+        <td>{% if a.answer/reaction_flg = "0" %}-{% else %}○{% endif %}</td>
         <td>
-          <a href="answers/{{a.answers/question_id}}/{{a.answers/user_id}}">comment</a>
+          <a href="answers/{{a.answer/question_id}}/{{a.answer/user_id}}">comment</a>
        </td>
       </tr>
     {% endfor %}

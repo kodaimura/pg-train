@@ -6,13 +6,13 @@
 
 (defn insert!
   [key-map]
-  (sql/insert! db :answers key-map))
+  (sql/insert! db :answer key-map))
 
 (defn update!
   [key-map where-params]
-  (sql/update! db :answers key-map where-params))
+  (sql/update! db :answer key-map where-params))
 
-(defn select-by-user_id
+(defn get-user-answers
   [user_id]
   (let [sql [
          "select
@@ -25,12 +25,12 @@
             comment,
             create_at,
             update_at
-          from answers
+          from answer
           where user_id = ?"
           user_id]]
     (sql/query db sql)))
 
-(defn select-by-question_id_and_user_id
+(defn get-answer
   [question_id user_id]
   (let [sql [
          "select
@@ -43,13 +43,13 @@
             comment,
             create_at,
             update_at
-          from answers
+          from answer
           where question_id = ? and user_id = ?"
           question_id
           user_id]]
     (sql/query db sql)))
 
-(defn select-uqa
+(defn get-qas
   [params]
   (let [sql 
         (remove nil?
@@ -67,9 +67,9 @@
                q.answer,
                q.level, 
                q.respondents
-             from answers as a, questions as q, users as u
-             where a.question_id = q.id
-               and a.user_id = u.id
+             from answer as a, question as q, users as u
+             where a.question_id = q.question_id
+               and a.user_id = u.user_id
                and q.del_flg = '0'"
              (if (:user_id params) " and a.user_id = ?" "")
              (if (:question_id params) " and a.question_id = ?" "")

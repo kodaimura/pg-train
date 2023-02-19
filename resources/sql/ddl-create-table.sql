@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS users (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	user_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	username TEXT NOT NULL UNIQUE,
 	password TEXT NOT NULL,
 	create_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
 	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime'))
 );
 
-CREATE TABLE IF NOT EXISTS questions (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS question (
+	question_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	title TEXT NOT NULL,
 	statement TEXT NOT NULL,
 	hint TEXT,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS questions (
 	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime'))
 );
 
-CREATE TABLE IF NOT EXISTS answers (
+CREATE TABLE IF NOT EXISTS answer (
 	user_id INTEGER,
 	question_id INTEGER,
 	correct_flg CHAR(1) NOT NULL DEFAULT '0',
@@ -40,16 +40,16 @@ BEGIN
 	WHERE rowid == NEW.rowid;
 END;
 
-CREATE TRIGGER IF NOT EXISTS trg_questions_upd AFTER UPDATE ON questions
+CREATE TRIGGER IF NOT EXISTS trg_question_upd AFTER UPDATE ON question
 BEGIN
-	UPDATE questions
+	UPDATE question
 	SET update_at = DATETIME('now', 'localtime')
 	WHERE rowid == NEW.rowid;
 END;
 
-CREATE TRIGGER IF NOT EXISTS trg_answers_upd AFTER UPDATE ON answers
+CREATE TRIGGER IF NOT EXISTS trg_answer_upd AFTER UPDATE ON answer
 BEGIN
-	UPDATE answers
+	UPDATE answer
 	SET update_at = DATETIME('now', 'localtime')
 	WHERE rowid == NEW.rowid;
 END;

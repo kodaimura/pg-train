@@ -12,19 +12,19 @@
   [key-map where-params]
   (sql/update! db :users key-map where-params))
 
-(defn select-by-username
+(defn get-user-by-username
   [username]
   (let [sql [
-         "select id, username, password 
+         "select user_id, username, password 
           from users
           where username = ?"
           username]]
     (sql/query db sql)))
 
-(defn select-all
+(defn get-users
   []
   (let [sql [
-         "select id, username, create_at 
+         "select user_id, username, create_at 
           from users
           where username != 'admin'"]]
     (sql/query db sql)))

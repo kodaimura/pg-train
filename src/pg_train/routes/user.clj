@@ -15,33 +15,33 @@
   [{:keys [params]}]
   (let [name (:username params)
         pass (:password params)
-        result (models.user/select-by-username name)
+        result (models.user/get-user-by-username name)
         user (if (empty? result) nil (first result))
         login-ok? (and (not (nil? user))
                        (hashers/check 
                         pass
                         (:users/password user)))]
     (if login-ok? 
-        (let [token (jwt/create-token (:users/id user) name)]
+        (let [token (jwt/create-token (:users/user_id user) name)]
           (assoc (response "SetCookie")
                  :cookies {"token" {:value token}}))
         (status 401))))
 
 
-;(defn signup-page
-;  [req]
-;  (response (template/render "signup.html" {})))
+(defn signup-page
+  [req]
+  (response (template/render "signup.html" {})))
 
-;(defn signup-post
-;  [{:keys [params]}]
-;  (let [user (models.user/select-by-username (:username params))]
-;    (if (empty? user)
-;        (try (models.user/insert! (assoc (dissoc params :password)
-;                                    :password (hashers/derive (:password params))))
-;          (status 200)
-;          (catch Exception _
-;            (status 500)))
-;        (status 409))))
+(defn signup-post
+  [{:keys [params]}]
+  (let [user (models.user/get-user-by-username (:username params))]
+    (if (empty? user)
+        (try (models.user/insert! (assoc (dissoc params :password)
+                                    :password (hashers/derive (:password params))))
+          (status 200)
+          (catch Exception _
+            (status 500)))
+        (status 409))))
 
 (defn logout
   [req]
@@ -58,8 +58,8 @@
    {:middleware []}
    ["/login" {:get login-page
    	          :post login-post}]
-   ;["/signup" {:get signup-page
-   ;	           :post signup-post}]
+   ["/signup" {:get signup-page
+   	           :post signup-post}]
    ["/logout" {:get logout}]])
 
 (def user-routes

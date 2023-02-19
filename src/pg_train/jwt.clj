@@ -2,17 +2,15 @@
   (:require 
     [ring.util.response :refer [redirect status]]
     [buddy.sign.jwt :as jwt]
-    [clj-time.core :as time]))
+    [clj-time.core :as time]
+    [pg-train.env :refer [env]]))
 
 
-(def secret "secret")
+(def secret (env :jwt_secret))
 
 (defn unauthorized-handler
   [request]
-  (let [uri (:uri request)]
-    (if (and (not (nil? uri)) (re-matches #"/api.*" uri))
-        (status 401)
-        (redirect "/login"))))
+  (status 401))
 
 (defn wrap-jwt-authentication
   [handler]

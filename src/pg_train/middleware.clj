@@ -1,6 +1,7 @@
 (ns pg-train.middleware
   (:require 
     [reitit.ring :as ring]
+    [ring.util.response :refer [status]]
     [ring.middleware.params :refer [wrap-params]]
     [ring.logger :refer [wrap-log-request-params 
                          wrap-log-response
@@ -8,7 +9,6 @@
     [ring.middleware.keyword-params :refer [wrap-keyword-params]]
     [ring.middleware.json :refer [wrap-json-params wrap-json-response]]
     [ring.middleware.cookies :refer [wrap-cookies]]))
-
 
 (defn wrap-base
   [handler]

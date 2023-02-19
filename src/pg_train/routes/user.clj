@@ -18,13 +18,10 @@
         result (models.user/get-user-by-username name)
         user (if (empty? result) nil (first result))
         login-ok? (and (not (nil? user))
-                       (hashers/check 
-                        pass
-                        (:users/password user)))]
+                       (hashers/check pass (:users/password user)))]
     (if login-ok? 
         (let [token (jwt/create-token (:users/user_id user) name)]
-          (assoc (response "SetCookie")
-                 :cookies {"token" {:value token}}))
+          (assoc (response "SetCookie") :cookies {"token" {:value token}}))
         (status 401))))
 
 
@@ -36,11 +33,9 @@
   [{:keys [params]}]
   (let [user (models.user/get-user-by-username (:username params))]
     (if (empty? user)
-        (try (models.user/insert! (assoc (dissoc params :password)
-                                    :password (hashers/derive (:password params))))
-          (status 200)
-          (catch Exception _
-            (status 500)))
+        (do (models.user/insert! (assoc (dissoc params :password)
+                                       :password (hashers/derive (:password params))))
+            (status 200))
         (status 409))))
 
 (defn logout

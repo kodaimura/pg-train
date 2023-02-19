@@ -12,15 +12,21 @@
   [request]
   (status 401))
 
+(defn unsign
+  [token secret]
+  (try
+    (jwt/unsign token secret)
+    (catch Exception _
+      false)))
+
 (defn wrap-jwt-authentication
   [handler]
   (fn [request]
-    (let [token (get-in request [:cookies "token" :value])]
-      (try
-        (let [claims (jwt/unsign token secret)]
-          (handler (assoc request :identity claims)))
-        (catch Exception e
-          (unauthorized-handler request))))))
+    (let [token (get-in request [:cookies "token" :value])
+          claims (unsign token secret)]
+      (if claims
+          (handler (assoc request :identity claims))
+          (unauthorized-handler request)))))
 
 (defn create-token
   [id username]

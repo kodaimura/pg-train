@@ -23,12 +23,9 @@
         user_id (jwt/payload-id req)
         question (models.question/get-question question_id)
         answer (models.answer/get-answer question_id user_id)]
-    (cond
-      (empty? question) (redirect "/login")
-      (empty? answer) (response (template/render "answer-form.html" 
-                        {:question (first question)}))
-      :else (response (template/render "answer-form.html" 
-                        {:question (first question) :answer (first answer)})))))
+    (if (empty? answer) 
+        (response (template/render "answer-form.html" {:question (first question)}))
+        (response (template/render "answer-form.html" {:question (first question) :answer (first answer)})))))
 
 (defn answer-init
   [question_id user_id & 
@@ -47,31 +44,21 @@
   (let [question_id (get-in req [:path-params :question_id])
         user_id (jwt/payload-id req)
         answer (models.answer/get-answer question_id user_id)]
-    (try
-      (if (empty? answer)
-          (models.answer/insert!
-            (answer-init question_id user_id {:correct_flg "1"}))
-          (models.answer/update!
-            {:correct_flg "1"} {:question_id question_id :user_id user_id}))
-      (models.question/inc-respondents! question_id)
-      (status 200)
-      (catch Exception _
-        (status 500)))))
+    (if (empty? answer)
+        (models.answer/insert! (answer-init question_id user_id {:correct_flg "1"}))
+        (models.answer/update! {:correct_flg "1"} {:question_id question_id :user_id user_id}))
+    (models.question/inc-respondents! question_id)
+    (status 200)))
 
 (defn register-help_flg!
   [req]
   (let [question_id (get-in req [:path-params :question_id])
         user_id (jwt/payload-id req)
         answer (models.answer/get-answer question_id user_id)]
-    (try
-      (if (empty? answer)
-          (models.answer/insert! 
-            (answer-init question_id user_id {:help_flg "1"}))
-          (models.answer/update!
-            {:help_flg "1"} {:question_id question_id :user_id user_id}))
-      (status 200)
-      (catch Exception _
-        (status 500)))))
+    (if (empty? answer)
+        (models.answer/insert! (answer-init question_id user_id {:help_flg "1"}))
+        (models.answer/update! {:help_flg "1"} {:question_id question_id :user_id user_id}))
+    (status 200)))
 
 (defn register-program!
   [req]
@@ -79,15 +66,10 @@
         user_id (jwt/payload-id req)
         program (get-in req [:params :program])
         answer (models.answer/get-answer question_id user_id)]
-    (try
-      (if (empty? answer)
-          (models.answer/insert! 
-            (answer-init question_id user_id {:program program}))
-          (models.answer/update!
-            {:program program} {:question_id question_id :user_id user_id}))
-      (status 200)
-      (catch Exception _
-        (status 500)))))
+    (if (empty? answer)
+        (models.answer/insert! (answer-init question_id user_id {:program program}))
+        (models.answer/update! {:program program} {:question_id question_id :user_id user_id}))
+    (status 200)))
 
 (defn wrap-home
   [handler]

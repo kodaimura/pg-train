@@ -17,11 +17,10 @@
   [req]
   (let [questions (models.question/get-all-questions)]
     (response (template/render "admin-questions.html"
-                {:questions questions}))))
+                  {:questions questions}))))
 
 (defn answers-page
   [{:keys [params]}]
-  (println params)
   (let [answers (models.answer/get-qas params)]
     (response (template/render "admin-answers.html"
                 {:answers answers}))))
@@ -35,12 +34,10 @@
 (defn comment-page
   [{:keys [path-params]}]
   (let [answer (models.answer/get-answer
-                (:question_id path-params) (:user_id path-params))
-        question (models.question/get-question (:question_id path-params))]
-    (if (or (empty? answer) (empty? question))
-        (redirect "/login")
-        (response (template/render "admin-comment-form.html"
-                    {:answer (first answer) :question (first question)})))))
+                 (:question_id path-params) (:user_id path-params))
+          question (models.question/get-question (:question_id path-params))]
+      (response (template/render "admin-comment-form.html"
+                  {:answer (first answer) :question (first question)}))))
 
 (defn question-page
   [{:keys [path-params]}]
@@ -54,37 +51,25 @@
 
 (defn register-question!
   [{:keys [path-params params]}]
-  (try
-  	(if (= "new" (:question_id path-params))
-  	    (models.question/insert! params)
-  	    (models.question/update! params path-params))
-    (redirect "/admin/questions")
-    (catch Exception _
-      (redirect "/login"))))
+  (if (= "new" (:question_id path-params))
+  	  (models.question/insert! params)
+  	  (models.question/update! params path-params))
+  (redirect "/admin/questions"))
 
 (defn register-comment!
   [{:keys [path-params params]}]
-  (try
-  	(models.answer/update! params path-params)
-    (status 200)
-    (catch Exception _
-      (status 500))))
+  (models.answer/update! params path-params)
+  (status 200))
 
 (defn settled!
   [{:keys [path-params]}]
-  (try
-  	(models.answer/update! {:help_flg "0"} path-params)
-    (status 200)
-    (catch Exception _
-      (status 500))))
+  (models.answer/update! {:help_flg "0"} path-params)
+  (status 200))
 
 (defn reaction!
   [{:keys [path-params]}]
-  (try
-    (models.answer/update! {:reaction_flg "1"} path-params)
-    (status 200)
-    (catch Exception _
-      (status 500))))
+  (models.answer/update! {:reaction_flg "1"} path-params)
+  (status 200))
 
 (defn signup-page
   [req]
@@ -94,12 +79,10 @@
   [{:keys [params]}]
   (let [user (models.user/get-user-by-username (:username params))]
     (if (empty? user)
-        (try (models.user/insert! (assoc (dissoc params :password)
-                                    :password (hashers/derive (:password params))))
-          (status 200)
-          (catch Exception _
-            (status 500)))
-        (status 409))))
+        (models.user/insert! (assoc (dissoc params :password)
+                               :password (hashers/derive (:password params))))
+        (status 409))
+    (status 200)))
 
 (defn wrap-admin
   [handler]

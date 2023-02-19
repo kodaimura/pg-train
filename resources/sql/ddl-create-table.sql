@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS question (
 	question_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	title TEXT NOT NULL,
 	statement TEXT NOT NULL,
-	hint TEXT,
 	answer TEXT NOT NULL,
 	level INTEGER,
 	respondents INTEGER NOT NULL DEFAULT 0,

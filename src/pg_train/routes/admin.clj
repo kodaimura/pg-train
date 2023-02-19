@@ -39,17 +39,17 @@
         question (models.question/get-question (:question_id path-params))]
     (if (or (empty? answer) (empty? question))
         (redirect "/login")
-        (response (template/render "admin-comment.html"
+        (response (template/render "admin-comment-form.html"
                     {:answer (first answer) :question (first question)})))))
 
 (defn question-page
   [{:keys [path-params]}]
   (if (= "new" (:question_id path-params))
-      (response (template/render "admin-question.html" {}))
+      (response (template/render "admin-question-form.html" {}))
       (let [question (models.question/get-question (:question_id path-params))]
         (if (empty? question)
-            (response (template/render "admin-question.html" {}))
-            (response (template/render "admin-question.html" 
+            (response (template/render "admin-question-form.html" {}))
+            (response (template/render "admin-question-form.html" 
                         {:question (first question)}))))))
 
 (defn register-question!

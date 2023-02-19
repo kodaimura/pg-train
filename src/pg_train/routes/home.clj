@@ -25,9 +25,9 @@
         answer (models.answer/get-answer question_id user_id)]
     (cond
       (empty? question) (redirect "/login")
-      (empty? answer) (response (template/render "answer.html" 
+      (empty? answer) (response (template/render "answer-form.html" 
                         {:question (first question)}))
-      :else (response (template/render "answer.html" 
+      :else (response (template/render "answer-form.html" 
                         {:question (first question) :answer (first answer)})))))
 
 (defn answer-init

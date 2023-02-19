@@ -3,10 +3,12 @@
 {% block content %}
   <p id="error"></p>
   <form name="signupForm" onsubmit="return false">
-    <input type="text" name="username">
-    <input type="password" name="password">
-    <input type="password" name="password2">
-    <input type="button" id="send" value="signup">
+    <div class="nput-group input-group-lg mx-auto d-grid" style="width:300px; max-width:75%;">
+      <input type="text" class="form-control" placeholder="ユーザ名" name="username">
+      <input type="password" class="form-control" placeholder="パスワード" name="password">
+      <input type="password" class="form-control mb-4" placeholder="パスワード(確認用)" name="password2">
+      <input type="button" class="btn btn-primary" id="send" value="サインアップ">
+    </div>
   </form>
 
   <script type="text/javascript">

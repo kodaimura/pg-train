@@ -2,10 +2,12 @@
 {% block title %}PG-TRAIN{% endblock %}
 {% block content %}
   <p id="error"></p>
-  <form name="loginForm" onsubmit="return false">
-    <input type="text" name="username">
-    <input type="password" name="password">
-    <input type="button" id="send" value="login">
+  <form name="loginForm" class="d-flex align-items-center" onsubmit="return false">
+    <div class="nput-group input-group-lg mx-auto d-grid" style="width:300px; max-width:75%;">
+      <input type="text" class="form-control" placeholder="ユーザ名" name="username">
+      <input type="password" class="form-control mb-4" placeholder="パスワード" name="password">
+      <input type="button" class="btn btn-primary" id="send" value="サインイン">
+    </div>
   </form>
 
   <script type="text/javascript">

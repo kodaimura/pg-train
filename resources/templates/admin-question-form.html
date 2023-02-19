@@ -1,20 +1,46 @@
 {% extends "base.html" %}
 {% block title %}PG-TRAIN{% endblock %}
 {% block content %}
+  <a href="/admin/questions">戻る</a>
   <form method="post">
-    <input type="text" name="title" value="{{question.question/title}}">
-    <input type="text" name="statement" value="{{question.question/statement}}">
-    <input type="text" name="answer" value="{{question.question/answer}}">
-    <input type="text" name="hint" value="{{question.question/hint}}">
-    <input type="number" name="level" value="{{question.question/level}}">
-    <input type="text" name="classifying_id" value="{{question.question/classifying_id}}">
-    {% if question.question/del_flg = 1 %}
-    有効<input type="radio" name="del_flg" value="0">
-    無効<input type="radio" name="del_flg" value="1" checked>
-    {% else %}
-    有効<input type="radio" name="del_flg" value="0" checked>
-    無効<input type="radio" name="del_flg" value="1">
-    {% endif %}
-    <input type="submit" id="send" value="regist">
+    <div class="mb-2">
+      <label for="title">タイトル</label>
+      <input type="text" class="form-control" name="title" value="{{question.question/title}}">
+    </div>
+    <div class="mb-2">
+      <label for="statement">内容</label>
+      <textarea type="text" class="form-control" name="statement" rows="7">{{question.question/statement}}</textarea>
+    </div>
+    <div class="row">
+      <div class="mb-2 col-md-8">
+        <label for="answer">答え</label>
+        <input type="text" class="form-control" name="answer" value="{{question.question/answer}}">
+      </div>
+      <div class="mb-2 col-md-4">
+        <label for="level">難易度</label>
+        <input type="number" class="form-control" name="level" value="{{question.question/level}}">
+      </div>
+    </div>
+    <input type="hidden" class="form-control" name="classifying_id" value="1">
+
+    <div class="d-flex">
+      <div class="form-check">
+        {% if question.question/del_flg = 1 %}
+        <input type="radio" name="del_flg" id="del_flg0" value="0">
+        {% else %}
+        <input type="radio" name="del_flg" id="del_flg0" value="0" checked>
+        {% endif %}
+        <label class="form-check-label" for="del_flg0">有効</label>
+      </div>
+      <div class="form-check">
+        {% if question.question/del_flg = 1 %}
+        <input type="radio" name="del_flg" id="del_flg1" value="1" checked>
+        {% else %}
+        <input type="radio" name="del_flg" id="del_flg1" value="1">
+        {% endif %}
+        <label class="form-check-label" for="del_flg1">無効</label>
+      </div>
+      <input type="submit" class="btn btn-primary ms-auto" id="send" value="登録">
+    </div>
   </form>
 {% endblock %}

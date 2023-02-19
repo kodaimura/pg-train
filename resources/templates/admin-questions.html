@@ -1,26 +1,28 @@
 {% extends "base.html" %}
 {% block title %}PG-TRAIN{% endblock %}
 {% block content %}
-  <table>
+  <a href="/admin">戻る</a>
+  <table class="table">
     <thead>
     <tr>
-      <th>id</th>
-      <th>title</th>
-      <th>statement</th>
-      <th>answer</th>
-      <th>hint</th>
-      <th>level</th>
-      <th>respondents</th>
+      <th>QID</th>
+      <th>タイトル</th>
+      <th>答え</th>
+      <th>難易度</th>
+      <th>正答人数</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
     {% for q in questions %}
+      {% if q.question/del_flg = "1" %}
+      <tr class="bg-info">
+      {% else %}
       <tr>
+      {% endif %}
         <td>{{q.question/question_id}}</td>
         <td>{{q.question/title}}</td>
-        <td>{{q.question/statement}}</td>
         <td>{{q.question/answer}}</td>
-        <td>{{q.question/hint}}</td>
         <td>{{q.question/level}}</td>
         <td>{{q.question/respondents}}</td>
         <td><a href="questions/{{q.question/question_id}}">更新</a></td>

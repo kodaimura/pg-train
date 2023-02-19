@@ -1,42 +1,50 @@
 {% extends "base.html" %}
 {% block title %}PG-TRAIN{% endblock %}
 {% block content %}
-  <p>{{question.question/question_id}}</p>
-  <p>{{question.question/title}}</p>
-  <p>{{question.question/statement}}</p>
-  <p>{{answer.answer/program}}</p>
-
-  <p id="error"></p>
-  <form name="commentForm" method="post" onsubmit="return false">
-    <textarea name="comment" rows="10" cols="30">{{answer.answer/comment}}</textarea>
-    <input type="submit" id="send-comment" value="send">
-  </form>
-
-  {% if answer.answer/help_flg = "1" %}
-  <form onsubmit="return false">
-    <input type="button" id="send-settled" value="settled">
-  </form>
-  {% else %}
-  <form onsubmit="return false">
-    <input type="button" id="send-settled" value="settled" disabled>
-  </form>
-  {% endif %}
-
-  {% if answer.answer/reaction_flg = "1" %}
-  <form onsubmit="return false">
-    <input type="button" id="send-reaction" value="reaction" disabled>
-  </form>
-  {% elif answer.answer/correct_flg = "0" %}
-  <form onsubmit="return false">
-    <input type="button" id="send-reaction" value="reaction" disabled>
-  </form>
-  {% else %}
-  <form onsubmit="return false">
-    <input type="button" id="send-reaction" value="reaction">
-  </form>
-  {% endif %}
-
   <a href="/admin/answers">戻る</a>
+  <div class="row">
+    <div class="col-md-5">
+      <div class="mb-3">
+        <h3>{{question.question/question_id}}. {{question.question/title}}</h3>
+        <div style="word-wrap:break-word;">{{question.question/statement}}</div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <form onsubmit="return false">
+          {% if answer.answer/help_flg = "1" %}
+          <input type="button" class="btn btn-warning"　id="send-settled" value="コメント完了">
+          {% else %}
+          <input type="button" class="btn btn-secondary" id="send-settled" value="コメント完了" disabled>
+          {% endif %}
+        </form>
+      
+        <form onsubmit="return false">
+          {% if answer.answer/reaction_flg = "1" %}
+          <input type="button" class="btn btn-danger" id="send-reaction" value="いいね" disabled>
+          {% elif answer.answer/correct_flg = "0" %}
+          <input type="button" class="btn btn-secondary" id="send-reaction" value="いいね" disabled>
+          {% else %}
+          <input type="button" class="btn btn-danger"　id="send-reaction" value="いいね">
+          {% endif %}
+        </form>
+      </div>
+
+      <div id="msg"></div>
+      <form name="commentForm" method="post" onsubmit="return false">
+        <textarea name="comment" class="form-control" rows="7">{{answer.answer/comment}}</textarea>
+        <div class="w-100 text-end">
+          <input type="submit" class="btn btn-primary" id="send-comment" value="保存">
+        </div>
+      </form>
+    </div>
+
+    <div class="vh-100 col-md-7">
+      <div class="h-75 overflow-auto">
+        <pre class="prettyprint linenums">
+        {{answer.answer/program}}
+        </pre>
+      </div>
+    </div>
+  </div>
   
   <script type="text/javascript">
     document.getElementById('send-comment').addEventListener('click', () => {
@@ -47,7 +55,18 @@
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({comment})
       }).then(response => {
-        document.getElementById('error').innerHTML = (response.ok)? "saved" : "error";
+        document.getElementById('msg').classList.remove("text-danger");
+        document.getElementById('msg').classList.remove("text-success");
+        if (response.ok) {
+          document.getElementById('msg').classList.add("text-success");
+          document.getElementById('msg').innerHTML = "SAVED";
+        } else {
+          document.getElementById('msg').classList.add("text-danger");
+          document.getElementById('msg').innerHTML = "ERROR";
+        }
+        setTimeout(() => {
+          document.getElementById('msg').innerHTML = "";
+        }, 2000);
       });
     })
 
@@ -61,4 +80,5 @@
       .then(() => {window.location.reload()});
     })
   </script>
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&skin=default"></script>
 {% endblock %}

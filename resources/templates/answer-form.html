@@ -1,55 +1,66 @@
 {% extends "base.html" %}
 {% block title %}PG-TRAIN{% endblock %}
 {% block content %}
+  <a href="/questions">戻る</a>
 
-  {{question.question/question_id}}
-  {{question.question/title}}
-  {{question.question/statement}}
-  {{question.question/level}}
-  {{answer.answer/comment}}
-  
+  <h3>{{question.question/question_id}}. {{question.question/title}}</h3>
+  <div style="word-wrap:break-word;">{{question.question/statement}}</div>
   <input type="hidden" id="correct-answer" value="{{question.question/answer}}">
-  <p id="pass-fail"></p>
-  {% if answer.answer/correct_flg = "1" %}
+
   <form name="answerForm" onsubmit="return false">
+    <div id="msg" class="fs-3"></div>
+    {% if answer.answer/correct_flg = "1" %}
     <input type="text" name="answer" value="{{question.question/answer}}" disabled>
-    <input type="button" id="send-answer" value="send" disabled>
-  </form>
-  {% else %}
-  <form name="answerForm" onsubmit="return false">
+    <input type="button" id="send-answer" value="回答" disabled>
+    {% else %}
     <input type="text" name="answer">
-    <input type="button" id="send-answer" value="send">
+    <input type="button" id="send-answer" value="回答">
+    {% endif %}
   </form>
-  {% endif %}
 
+  <form name="helpForm" onsubmit="return false">
+    <div class="w-100 text-end">
+      {% if answer.answer/help_flg = "1" %}
+      <input type="button" class="btn btn-warning" id="send-help" value="ヘルプを送信" disabled>
+      {% else %}
+      <input type="button" class="btn btn-warning" id="send-help" value="ヘルプを送信">
+      {% endif %}
+    </div>
+  </form>
+  <hr>
+  <h5>プログラム</h5>
   <form name="programForm" onsubmit="return false">
-    <textarea name="program" rows="10" cols="50">{{answer.answer/program}}</textarea>
-    <input type="submit" id="send-program" value="send">
+    <textarea name="program" class="form-control" rows="9">
+    {{answer.answer/program}}
+    </textarea>
+    <div class="w-100 text-end">
+      <input type="submit" class="btn btn-primary" id="send-program" value="プログラムを送信">
+    </div>
   </form>
-
-  {% if answer.answer/help_flg = "1" %}
-  <form name="helpForm" onsubmit="return false">
-    <input type="button" id="send-help" value="help" disabled>
-  </form>
-  {% else %}
-  <form name="helpForm" onsubmit="return false">
-    <input type="button" id="send-help" value="help">
-  </form>
-  {% endif %}
-
-  <a href="/questions">戻る</button>
+  <hr>
+  <h5>コメント</h5>
+  <div style="word-wrap:break-word;">{{answer.answer/comment}}</div>
 
   <script type="text/javascript">
     document.getElementById('send-answer').addEventListener('click', () => {
       const correctAnswer = document.getElementById('correct-answer').value;
       const form = document.forms.answerForm;
 
+      document.getElementById('msg').classList.remove("text-secondary");
+      document.getElementById('msg').classList.remove("text-success");
       if (correctAnswer === form.answer.value) {
         fetch(`${location.pathname}/correct`, {method: 'POST'})
-        document.getElementById('pass-fail').innerHTML = "OK";
+        document.getElementById('msg').classList.add("text-success");
+        document.getElementById('msg').innerHTML = "Correct!!!";
       } else {
-        document.getElementById('pass-fail').innerHTML = "NG";
+        document.getElementById('msg').classList.add("text-secondary");
+        document.getElementById('msg').innerHTML = "Miss";
       }
+
+      setTimeout(() => {
+        document.getElementById('msg').innerHTML = "";
+      }, 4000);
+
     })
 
     document.getElementById('send-program').addEventListener('click', () => {

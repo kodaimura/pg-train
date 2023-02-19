@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 {% block title %}PG-TRAIN{% endblock %}
 {% block content %}
-  <table>
+  <a href="/admin">戻る</a>
+  <table class="table">
     <thead>
     <tr>
-      <th>user_id</th>
-      <th>name</th>
-      <th>question_id</th>
-      <th>title</th>
-      <th>he</th>
-      <th>cm</th>
-      <th>co</th>
-      <th>re</th>
+      <th>ユーザID</th>
+      <th>名前</th>
+      <th>QID</th>
+      <th>タイトル</th>
+      <th>ヘルプ</th>
+      <th>コメント</th>
+      <th>正解</th>
+      <th>いいね</th>
       <th></th>
     </tr>
     </thead>
@@ -23,11 +24,11 @@
         <td>{{a.answer/question_id}}</td>
         <td>{{a.question/title}}</td>
         <td>{% if a.answer/help_flg = "0" %}-{% else %}○{% endif %}</td>
-        <td>{% if a.answer/comment|count-is:0 %}-{% else %}○{% endif %}</td>
+        <td>{% if a.answer/comment|count-is:0 %}-{% else %}済{% endif %}</td>
         <td>{% if a.answer/correct_flg = "0" %}-{% else %}○{% endif %}</td>
-        <td>{% if a.answer/reaction_flg = "0" %}-{% else %}○{% endif %}</td>
+        <td>{% if a.answer/reaction_flg = "0" %}-{% else %}済{% endif %}</td>
         <td>
-          <a href="answers/{{a.answer/question_id}}/{{a.answer/user_id}}">comment</a>
+          <a href="answers/{{a.answer/question_id}}/{{a.answer/user_id}}">コメント</a>
        </td>
       </tr>
     {% endfor %}

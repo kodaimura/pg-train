@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block title %}PG-TRAIN{% endblock %}
 {% block content %}
-  <a href="/admin/users/new">追加</a>
-  <table>
+  <a href="/admin">戻る</a>
+  <table class="table">
     <thead>
     <tr>
-      <th>id</th>
-      <th>name</th>
-      <th>create_at</th>
-      <th>answers</th>
+      <th>ユーザID</th>
+      <th>名前</th>
+      <th>登録日</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
@@ -17,10 +17,10 @@
         <td>{{u.users/user_id}}</td>
         <td>{{u.users/username}}</td>
         <td>{{u.users/create_at}}</td>
-        <td><a href="/admin/answers?user_id={{u.users/user_id}}">comment</a></td>
+        <td><a href="/admin/answers?user_id={{u.users/user_id}}">解答一覧</a></td>
       </tr>
     {% endfor %}
     </tbody>
   </table>
-  <a href="/admin">戻る</a>
+  <a href="/admin/users/new">追加</a>
 {% endblock %}

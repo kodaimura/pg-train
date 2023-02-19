@@ -21,9 +21,9 @@
   <form name="helpForm" onsubmit="return false">
     <div class="w-100 text-end">
       {% if answer.answer/help_flg = "1" %}
-      <input type="button" class="btn btn-warning" id="send-help" value="ヘルプを送信" disabled>
+      <input type="button" class="btn btn-warning" id="send-help" value="ヘルプ解除">
       {% else %}
-      <input type="button" class="btn btn-warning" id="send-help" value="ヘルプを送信">
+      <input type="button" class="btn btn-outline-warning" id="send-help" value="ヘルプ">
       {% endif %}
     </div>
   </form>
@@ -42,7 +42,7 @@
   <div style="word-wrap:break-word;">{{answer.answer/comment}}</div>
 
   <script type="text/javascript">
-    document.getElementById('send-answer').addEventListener('click', () => {
+    document.getElementById('send-answer').addEventListener('click', (event) => {
       const correctAnswer = document.getElementById('correct-answer').value;
       const form = document.forms.answerForm;
 
@@ -52,6 +52,8 @@
         fetch(`${location.pathname}/correct`, {method: 'POST'})
         document.getElementById('msg').classList.add("text-success");
         document.getElementById('msg').innerHTML = "Correct!!!";
+        form.answer.disabled = true;
+        event.target.disabled = true;
       } else {
         document.getElementById('msg').classList.add("text-secondary");
         document.getElementById('msg').innerHTML = "Miss";

@@ -50,14 +50,19 @@
     (models.question/inc-correctcount! question_id)
     (status 200)))
 
-(defn register-help_flg!
+(defn bit-not
+  [bit]
+  (if (= bit "1") "0" "1"))
+
+(defn switch-help_flg!
   [req]
   (let [question_id (get-in req [:path-params :question_id])
         user_id (jwt/payload-id req)
         answer (models.answer/get-answer question_id user_id)]
     (if (empty? answer)
         (models.answer/insert! (answer-init question_id user_id {:help_flg "1"}))
-        (models.answer/update! {:help_flg "1"} {:question_id question_id :user_id user_id}))
+        (models.answer/update! {:help_flg (bit-not (:answer/help_flg (first answer)))} 
+                               {:question_id question_id :user_id user_id}))
     (status 200)))
 
 (defn register-program!
@@ -87,5 +92,5 @@
    ["/questions" {:get questions-page}]
    ["/questions/:question_id" {:get answer-page}]
    ["/questions/:question_id/correct" {:post register-correct_flg!}]
-   ["/questions/:question_id/help" {:post register-help_flg!}]
+   ["/questions/:question_id/help" {:post switch-help_flg!}]
    ["/questions/:question_id/program" {:post register-program!}]])

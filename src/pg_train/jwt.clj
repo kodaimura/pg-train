@@ -13,7 +13,7 @@
   (status 401))
 
 (defn unsign
-  [token secret]
+  [token]
   (try
     (jwt/unsign token secret)
     (catch Exception _
@@ -23,7 +23,7 @@
   [handler]
   (fn [request]
     (let [token (get-in request [:cookies "token" :value])
-          claims (unsign token secret)]
+          claims (unsign token)]
       (if claims
           (handler (assoc request :identity claims))
           (unauthorized-handler request)))))

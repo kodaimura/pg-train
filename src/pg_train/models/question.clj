@@ -25,7 +25,7 @@
   [id]
   (let [sql [
          "select 
-            question_i,
+            question_id,
             title,
             statement, 
             answer, 

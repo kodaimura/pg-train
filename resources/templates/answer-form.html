@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="description" content="" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  {% style "/css/style.css" %}
-  <title>answer</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}PG-TRAIN{% endblock %}
+{% block content %}
+
   {{question.question/question_id}}
   {{question.question/title}}
   {{question.question/statement}}
@@ -73,5 +67,4 @@
       .then(() => location.reload());
     })
   </script>
-</body>
-</html>
+{% endblock %}

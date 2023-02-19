@@ -1,17 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="description" content="" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  {% style "/css/style.css" %}
-  <title>admin</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}PG-TRAIN{% endblock %}
+{% block content %}
 <a href="/admin/questions">問題一覧</a>
 <a href="/admin/answers">回答一覧</a>
 <a href="/admin/answers?help_flg=1">ヘルプ一覧</a>
 <a href="/admin/answers?correct_flg=1">正答一覧</a>
 <a href="/admin/users">ユーザ一覧</a>
-</body>
-</html>
+{% endblock %}

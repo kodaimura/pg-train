@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="description" content="" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  {% style "/css/style.css" %}
-  <title>questions</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}PG-TRAIN{% endblock %}
+{% block content %}
   <table>
     <thead>
     <tr>
@@ -31,5 +24,4 @@
     </tbody>
   </table>
   <a href="/">戻る</button>
-</body>
-</html>
+{% endblock %}

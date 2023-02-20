@@ -1,5 +1,11 @@
 {% extends "base.html" %}
-{% block title %}PG-TRAIN{% endblock %}
+{% block navbar %}
+<div class="btn-group mb-3">
+  <a class="btn btn-outline-primary" href="/">トップ</a>
+  <a class="btn btn-outline-primary" href="/questions">問題一覧</a>
+  <a class="btn btn-outline-primary" href="/messages">チャット</a>
+</div>
+{% endblock %}
 {% block content %}
-<a href="/questions">問題一覧</a>
+トップページ
 {% endblock %}

@@ -1,7 +1,13 @@
 {% extends "base.html" %}
-{% block title %}PG-TRAIN{% endblock %}
+{% block navbar %}
+<div class="btn-group mb-3">
+  <a class="btn btn-primary" href="/admin/questions">問題</a>
+  <a class="btn btn-outline-primary" href="/admin/answers">回答</a>
+  <a class="btn btn-outline-primary" href="/admin/users">ユーザ</a>
+  <a class="btn btn-outline-primary" href="/admin/messages">チャット</a>
+</div>
+{% endblock %}
 {% block content %}
-  <a href="/admin">戻る</a>
   <table class="table">
     <thead>
     <tr>

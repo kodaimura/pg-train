@@ -25,6 +25,11 @@
     (response (template/render "admin-answers.html"
                 {:answers answers}))))
 
+(defn api-answers
+  [{:keys [params]}]
+  (let [answers (models.answer/get-qas params)]
+    (response {:answers answers})))
+
 (defn users-page
   [req]
   (let [users (models.user/get-users)]
@@ -101,6 +106,7 @@
    ; :question_id が new の時は新規登録
    ["/questions/:question_id" {:get question-page
    	                           :post register-question!}]
+   ["/api/answers" {:get api-answers}]
    ["/answers" {:get answers-page}]
    ["/answers/:question_id/:user_id" {:get comment-page}]
    ["/answers/:question_id/:user_id/comment" {:post register-comment!}]

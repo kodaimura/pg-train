@@ -1,9 +1,12 @@
 {% extends "base.html" %}
-{% block title %}PG-TRAIN{% endblock %}
+{% block navbar %}
+<div class="btn-group mb-3">
+  <a class="btn btn-outline-primary" href="/admin/questions">問題</a>
+  <a class="btn btn-outline-primary" href="/admin/answers">回答</a>
+  <a class="btn btn-outline-primary" href="/admin/users">ユーザ</a>
+  <a class="btn btn-outline-primary" href="/admin/messages">チャット</a>
+</div>
+{% endblock %}
 {% block content %}
-  <a href="/admin/questions">問題一覧</a>
-  <a href="/admin/answers">回答一覧</a>
-  <a href="/admin/answers?help_flg=1">ヘルプ一覧</a>
-  <a href="/admin/answers?correct_flg=1">正答一覧</a>
-  <a href="/admin/users">ユーザ一覧</a>
+管理者用
 {% endblock %}

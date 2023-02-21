@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block navbar %}
+  <a class="btn btn-primary" href="#" onClick="history.back(); return false;">戻る</a>
+{% endblock %}
+{% block content %}
+  <div class=>
+    {% for m in messages %}
+    <hr>
+    <div class="">
+      {% if m.message/send_from = 1 %}
+      村上晃大
+      {% else %}
+      me
+      {% endif %}{{m.message/create_at}}</div>
+    <pre class="">{{m.message/message}}</pre>
+    {% endfor %}
+    <div class="w-100" style="height: 80px">
+  </div>
+  <div class=" fixed-bottom mx-5 my-3">
+    <div class="input-group w-100">
+      <textarea type="text" id="message" class="form-control" rows="2"></textarea>
+      <input type="button" id="send" class="btn btn-primary" value="送信">
+    </div>
+  </div>
+  <script type="text/javascript">
+    document.body.scrollIntoView(false);
+
+    document.getElementById("send").addEventListener("click", () => {
+      const message = document.getElementById("message").value;
+
+      fetch("/messages", {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message})
+      })
+    })
+  </script>
+{% endblock %}

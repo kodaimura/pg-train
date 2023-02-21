@@ -1,11 +1,8 @@
 {% extends "base.html" %}
 {% block navbar %}
-<div class="btn-group mb-3">
-  <a class="btn btn-outline-primary" href="/admin/questions">問題</a>
-  <a class="btn btn-primary" href="/admin/answers">回答</a>
-  <a class="btn btn-outline-primary" href="/admin/users">ユーザ</a>
-  <a class="btn btn-outline-primary" href="/admin/messages">チャット</a>
-</div>
+  <a class="nav-link text-white" href="/admin/questions">問題一覧</a>
+  <a class="nav-link text-dark" href="/admin/answers">回答一覧</a>
+  <a class="nav-link text-white" href="/admin/users">ユーザ一覧</a>
 {% endblock %}
 {% block content %}
   <select class="form-select" id="filter">

@@ -1,11 +1,8 @@
 {% extends "base.html" %}
 {% block navbar %}
-<div class="btn-group mb-3">
-  <a class="btn btn-outline-primary" href="/admin/questions">問題</a>
-  <a class="btn btn-outline-primary" href="/admin/answers">回答</a>
-  <a class="btn btn-primary" href="/admin/users">ユーザ</a>
-  <a class="btn btn-outline-primary" href="/admin/messages">チャット</a>
-</div>
+  <a class="nav-link text-white" href="/admin/questions">問題一覧</a>
+  <a class="nav-link text-white" href="/admin/answers">回答一覧</a>
+  <a class="nav-link text-dark" href="/admin/users">ユーザ一覧</a>
 {% endblock %}
 {% block content %}
   <table class="table">
@@ -14,6 +11,7 @@
       <th>ユーザID</th>
       <th>名前</th>
       <th>登録日</th>
+      <th></th>
       <th></th>
     </tr>
     </thead>
@@ -24,6 +22,7 @@
         <td>{{u.users/username}}</td>
         <td>{{u.users/create_at}}</td>
         <td><a href="/admin/answers?user_id={{u.users/user_id}}">解答一覧</a></td>
+        <td><a href="/admin/messages?user_id={{u.users/user_id}}">チャット</a></td>
       </tr>
     {% endfor %}
     </tbody>

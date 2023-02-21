@@ -6,7 +6,8 @@
     [pg-train.template :as template]
     [pg-train.models.question :as models.question]
     [pg-train.models.answer :as models.answer]
-    [pg-train.models.user :as models.user]))
+    [pg-train.models.user :as models.user]
+    [pg-train.models.message :as models.message]))
 
 
 (defn admin-page
@@ -25,10 +26,12 @@
     (response (template/render "admin-answers.html"
                 {:answers answers}))))
 
-(defn api-answers
+(defn chat-page
   [{:keys [params]}]
-  (let [answers (models.answer/get-qas params)]
-    (response {:answers answers})))
+  (let [user_id (:user_id params)
+        messages (models.message/get-chat user_id 1)]
+    (response (template/render "admin-chat.html"
+                {:user_id user_id :messages messages}))))
 
 (defn users-page
   [req]
@@ -53,6 +56,26 @@
             (response (template/render "admin-question-form.html" {}))
             (response (template/render "admin-question-form.html" 
                         {:question (first question)}))))))
+
+(defn api-answers
+  [{:keys [params]}]
+  (let [answers (models.answer/get-qas params)]
+    (response {:answers answers})))
+
+(defn api-messages
+  [{:keys [params]}]
+  (let [user_id (:user_id params)
+        messages (models.message/get-chat user_id 1)]
+    (response {:messages messages})))
+
+(defn register-message!
+  [{:keys [params]}]
+  (models.message/insert! {
+  	:send_from 1
+  	:send_to (:send_to params)
+  	:message (:message params)
+  	})
+  (status 200))
 
 (defn register-question!
   [{:keys [path-params params]}]
@@ -104,8 +127,7 @@
    ["" {:get admin-page}]
    ["/questions" {:get questions-page}]
    ; :question_id が new の時は新規登録
-   ["/questions/:question_id" {:get question-page
-   	                           :post register-question!}]
+   ["/questions/:question_id" {:get question-page :post register-question!}]
    ["/api/answers" {:get api-answers}]
    ["/answers" {:get answers-page}]
    ["/answers/:question_id/:user_id" {:get comment-page}]
@@ -113,5 +135,5 @@
    ["/answers/:question_id/:user_id/settled" {:post settled!}]
    ["/answers/:question_id/:user_id/reaction" {:post reaction!}]
    ["/users" {:get users-page}]
-   ["/users/new" {:get signup-page
-   	              :post register-user!}]])
+   ["/users/new" {:get signup-page :post register-user!}]
+   ["/messages" {:get chat-page :post register-message!}]])

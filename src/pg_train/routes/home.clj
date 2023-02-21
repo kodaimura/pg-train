@@ -4,7 +4,8 @@
     [pg-train.jwt :as jwt]
     [pg-train.template :as template]
     [pg-train.models.question :as models.question]
-    [pg-train.models.answer :as models.answer]))
+    [pg-train.models.answer :as models.answer]
+    [pg-train.models.message :as models.message]))
 
 
 (defn home-page
@@ -16,6 +17,13 @@
   (let [questions (models.question/get-valid-questions)]
     (response (template/render "questions.html"
                 {:questions questions}))))
+
+(defn chat-page
+  [req]
+  (let [user_id (jwt/payload-id req)
+        messages (models.message/get-chat user_id 1)]
+    (response (template/render "chat.html"
+                {:messages messages}))))
 
 (defn answer-page
   [req]
@@ -76,6 +84,16 @@
         (models.answer/update! {:program program} {:question_id question_id :user_id user_id}))
     (status 200)))
 
+(defn register-message!
+  [req]
+  (let [params (:params req)]
+  	(models.message/insert! {
+  		:send_from (jwt/payload-id req)
+  		:send_to 1
+  		:message (:message params)
+  	})
+  	(status 200)))
+
 (defn wrap-home
   [handler]
   (fn [request]
@@ -93,4 +111,5 @@
    ["/questions/:question_id" {:get answer-page}]
    ["/questions/:question_id/correct" {:post register-correct_flg!}]
    ["/questions/:question_id/help" {:post switch-help_flg!}]
-   ["/questions/:question_id/program" {:post register-program!}]])
+   ["/questions/:question_id/program" {:post register-program!}]
+   ["/messages" {:get chat-page :post register-message!}]])

@@ -1,9 +1,6 @@
 {% extends "base.html" %}
 {% block navbar %}
-<div class="btn-group mb-3">
   <a class="btn btn-primary" href="#" onClick="history.back(); return false;">戻る</a>
-  <a class="btn btn-outline-primary" href="/messages">チャット</a>
-</div>
 {% endblock %}
 {% block content %}
   <h3>{{question.question/question_id}}. {{question.question/title}}</h3>

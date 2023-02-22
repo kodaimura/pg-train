@@ -10,7 +10,11 @@
 
 (defn home-page
   [req]
-  (response (template/render "home.html" {})))
+  (let [user_id (jwt/payload-id req)
+        username (jwt/payload-username req)
+        qc (models.question/get-qc user_id)]
+  (response (template/render "home.html" 
+              {:qc qc :username username}))))
 
 (defn questions-page
   [req]

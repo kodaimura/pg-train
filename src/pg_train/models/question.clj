@@ -67,3 +67,16 @@
             del_flg
           from question"]]
     (sql/query db sql)))
+
+(defn get-qc
+  [user_id]
+  (let [sql [
+         "select
+           	q.question_id,
+            a.correct_flg
+          from question as q
+          left outer join (select * from answer where user_id = ?) as a
+            on q.question_id = a.question_id
+          where q.del_flg = '0'"
+            user_id]]
+    (sql/query db sql)))

@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS question (
 	answer TEXT NOT NULL,
 	level INTEGER,
 	correct_count INTEGER NOT NULL DEFAULT 0,
-	classifying_id TEXT NOT NULL DEFAULT '00',
 	del_flg CHAR(1) NOT NULL DEFAULT '0',
 	create_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
 	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime'))

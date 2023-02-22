@@ -31,7 +31,6 @@
             answer, 
             level, 
             correct_count, 
-            classifying_id, 
             del_flg
           from question
           where question_id = ?"
@@ -47,8 +46,7 @@
             statement, 
             answer, 
             level, 
-            correct_count, 
-            classifying_id
+            correct_count
           from question
           where del_flg = '0'"]]
     (sql/query db sql)))
@@ -63,7 +61,6 @@
             answer, 
             level, 
             correct_count, 
-            classifying_id, 
             del_flg
           from question"]]
     (sql/query db sql)))

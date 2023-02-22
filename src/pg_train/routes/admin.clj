@@ -31,7 +31,9 @@
   (let [user_id (:user_id params)
         messages (models.message/get-chat user_id 1)]
     (response (template/render "admin-chat.html"
-                {:user_id user_id :messages messages}))))
+                {:user_id user_id 
+                 :messages messages 
+                 :last_time (:message/create_at (last messages))}))))
 
 (defn users-page
   [req]
@@ -64,9 +66,13 @@
 
 (defn api-messages
   [{:keys [params]}]
-  (let [user_id (:user_id params)
-        messages (models.message/get-chat user_id 1)]
-    (response {:messages messages})))
+  (let [last_time (:last_time params)
+        user_id (:user_id params)
+        messages (models.message/get-messages-after user_id 1 last_time)]
+    (if (empty? messages)
+        (response {:messages [] :last_time last_time})
+        (response {:messages messages 
+    	             :last_time (:message/create_at　(last messages))}))))
 
 (defn register-message!
   [{:keys [params]}]
@@ -136,4 +142,5 @@
    ["/answers/:question_id/:user_id/reaction" {:post reaction!}]
    ["/users" {:get users-page}]
    ["/users/new" {:get signup-page :post register-user!}]
-   ["/messages" {:get chat-page :post register-message!}]])
+   ["/messages" {:get chat-page :post register-message!}]
+   ["/api/messages" {:get api-messages}]])

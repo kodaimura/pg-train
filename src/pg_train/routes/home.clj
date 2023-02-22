@@ -23,7 +23,9 @@
   (let [user_id (jwt/payload-id req)
         messages (models.message/get-chat user_id 1)]
     (response (template/render "chat.html"
-                {:messages messages}))))
+                {:user_id user_id 
+                 :messages messages 
+                 :last_time (:message/create_at (last messages))}))))
 
 (defn answer-page
   [req]
@@ -94,6 +96,16 @@
   	})
   	(status 200)))
 
+(defn api-messages
+  [{:keys [params]}]
+  (let [last_time (:last_time params)
+        user_id (:user_id params)
+        messages (models.message/get-messages-after user_id 1 last_time)]
+    (if (empty? messages)
+        (response {:messages [] :last_time last_time})
+        (response {:messages messages 
+    	             :last_time (:message/create_at　(last messages))}))))
+
 (defn wrap-home
   [handler]
   (fn [request]
@@ -112,4 +124,5 @@
    ["/questions/:question_id/correct" {:post register-correct_flg!}]
    ["/questions/:question_id/help" {:post switch-help_flg!}]
    ["/questions/:question_id/program" {:post register-program!}]
-   ["/messages" {:get chat-page :post register-message!}]])
+   ["/messages" {:get chat-page :post register-message!}]
+   ["/api/messages" {:get api-messages}]])

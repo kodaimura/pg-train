@@ -3,18 +3,20 @@
   <a class="btn btn-primary" href="#" onClick="history.back(); return false;">戻る</a>
 {% endblock %}
 {% block content %}
-  <div class=>
-    {% for m in messages %}
-    <hr>
-    <div class="">
-      {% if m.message/send_from = 1 %}
-      村上晃大
-      {% else %}
-      me
-      {% endif %}{{m.message/create_at}}</div>
-    <pre class="">{{m.message/message}}</pre>
-    {% endfor %}
-    <div class="w-100" style="height: 80px">
+  <input type="hidden" id="send_to" value="{{user_id}}">
+  <input type="hidden" id="last_time" value="{{last_time}}">
+  <div>
+    <div id="messages">
+      {% for m in messages %}
+      <div>
+        <hr>
+        <div class="fw-bold">
+          {% if m.message/send_from = 1 %}村上晃大{% else %}me{% endif %}{{m.message/create_at}}</div>
+        <pre class="">{{m.message/message}}</pre>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="w-100" style="height: 80px"></div>
   </div>
   <div class=" fixed-bottom mx-5 my-3">
     <div class="input-group w-100">
@@ -27,12 +29,68 @@
 
     document.getElementById("send").addEventListener("click", () => {
       const message = document.getElementById("message").value;
+      const send_to = document.getElementById("send_to").value;
+      const last_time = document.getElementById("last_time").value;
 
       fetch("/messages", {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({message})
+        body: JSON.stringify({send_to, message})
+      }).then(() => {
+        fetch(`/api/messages?user_id=${send_to}&last_time=${last_time}`)
+        .then((response) => response.json())
+        .then((data) => {
+          document.getElementById("last_time").value = data["last_time"];
+          renderNewMessages(data["messages"]);
+          document.getElementById("message").value = "";
+        })
       })
     })
+
+    const renderNewMessages = (messages) => {
+      let hr = document.createElement("hr");
+      let msgDiv;
+      let div;
+      let pre;
+      let divText;
+      let preText;
+
+      for (m of messages) {
+        msgDiv = document.createElement("div");
+        div = document.createElement("div");
+        pre = document.createElement("pre");
+        divText = document.createTextNode(`${(m["message/send_from"] == "1")? "村上晃大" : "me"}${m["message/create_at"]}`);
+        preText = document.createTextNode(m["message/message"]);
+        
+        div.className = "fw-bold";
+        div.appendChild(divText);
+        pre.appendChild(preText);
+  
+        msgDiv.appendChild(hr);
+        msgDiv.appendChild(div);
+        msgDiv.appendChild(pre);
+
+        document.getElementById("messages").appendChild(msgDiv);
+        document.body.scrollIntoView(false);
+      }
+    }
+
+    const polling = () => {
+      const send_to = document.getElementById("send_to").value;
+
+      setTimeout(async () => {
+        const last_time = document.getElementById("last_time").value;
+        await fetch(`/api/messages?user_id=${send_to}&last_time=${last_time}`)
+        .then((response) => response.json())
+        .then((data) => {
+          document.getElementById("last_time").value = data["last_time"];
+          renderNewMessages(data["messages"]);
+        });
+
+        polling()
+      },30000)
+    }
+
+    polling()
   </script>
 {% endblock %}

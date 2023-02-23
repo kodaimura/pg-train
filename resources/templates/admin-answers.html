@@ -6,10 +6,10 @@
 {% endblock %}
 {% block content %}
   <select class="form-select" id="filter">
-    <option value="0" selected>ー</option>
+    <option value="0" selected>全て</option>
     <option value="1">ヘルプ</option>
-    <option value="2">正答</option>
-    <option value="3">全て</option>
+    <option value="2">正答 (未いいね)</option>
+    <option value="3">正答</option>
   </select>
   <table class="table">
     <thead>
@@ -54,6 +54,9 @@
       } else if (filterType === "1") {
         url += (query === "")? `?help_flg=1` : `${query}&help_flg=1`;
       } else if (filterType === "2") {
+        url += (query === "")? `?correct_flg=1` : `${query}&correct_flg=1`;
+        url += `&reaction_flg=0`;
+      } else if (filterType === "3" ){
         url += (query === "")? `?correct_flg=1` : `${query}&correct_flg=1`;
       } else {
         url += query

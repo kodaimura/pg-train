@@ -12,7 +12,7 @@
       <div class="d-flex justify-content-end">
         <form onsubmit="return false">
           {% if answer.answer/help_flg = "1" %}
-          <input type="button" class="btn btn-warning"　id="send-settled" value="コメント完了">
+          <input type="button" class="btn btn-warning" id="send-settled" value="コメント完了">
           {% else %}
           <input type="button" class="btn btn-secondary" id="send-settled" value="コメント完了" disabled>
           {% endif %}
@@ -24,7 +24,7 @@
           {% elif answer.answer/correct_flg = "0" %}
           <input type="button" class="btn btn-secondary" id="send-reaction" value="いいね" disabled>
           {% else %}
-          <input type="button" class="btn btn-danger"　id="send-reaction" value="いいね">
+          <input type="button" class="btn btn-danger" id="send-reaction" value="いいね">
           {% endif %}
         </form>
       </div>

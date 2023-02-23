@@ -41,6 +41,15 @@ CREATE TABLE IF NOT EXISTS message (
 	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime'))
 );
 
+CREATE TABLE IF NOT EXISTS general (
+	key1 TEXT,
+	key2 TEXT,
+	value TEXT,
+	remarks TEXT,
+	create_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
+	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime'))
+);
+
 CREATE TRIGGER IF NOT EXISTS trg_users_upd AFTER UPDATE ON users
 BEGIN
 	UPDATE users

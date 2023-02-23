@@ -7,12 +7,15 @@
     [pg-train.models.question :as models.question]
     [pg-train.models.answer :as models.answer]
     [pg-train.models.user :as models.user]
-    [pg-train.models.message :as models.message]))
+    [pg-train.models.message :as models.message]
+    [pg-train.models.general :as models.general]))
 
 
 (defn admin-page
   [req]
-  (response (template/render "admin.html" {})))
+  (let [notification (models.general/get-by-key1 "notification")]
+  	(response (template/render "admin.html" 
+  	             {:notification (first notification)}))))
 
 (defn questions-page
   [req]
@@ -118,6 +121,12 @@
         (status 409))
     (status 200)))
 
+(defn register-notification!
+  [{:keys [params]}]
+  (models.general/update! {:value (:notification params)} 
+                           {:key1 "notification"})
+  (status 200))
+
 (defn wrap-admin
   [handler]
   (fn [request]
@@ -143,4 +152,5 @@
    ["/users" {:get users-page}]
    ["/users/new" {:get signup-page :post register-user!}]
    ["/messages" {:get chat-page :post register-message!}]
-   ["/api/messages" {:get api-messages}]])
+   ["/api/messages" {:get api-messages}]
+   ["/notification" {:post register-notification!}]])

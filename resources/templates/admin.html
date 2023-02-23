@@ -1,9 +1,30 @@
 {% extends "base.html" %}
 {% block navbar %}
+  <a class="nav-link text-dark" href="/admin">トップ</a>
   <a class="nav-link text-white" href="/admin/questions">問題一覧</a>
   <a class="nav-link text-white" href="/admin/answers">回答一覧</a>
   <a class="nav-link text-white" href="/admin/users">ユーザ一覧</a>
 {% endblock %}
 {% block content %}
-管理者用
+  <h1 class="fs-6 mb-3">管理者用</h1>
+  <div class="row">
+    <h2 class="fs-5">お知らせ</h2>
+    <div class="col-md-5 mb-5">
+      <textarea id="notification" class="form-control" rows="20">{{notification.general/value}}</textarea>
+      <div class="text-end">
+        <input type="button" class="btn btn-primary" id="send-notification" value="登録">
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    document.getElementById("send-notification").addEventListener("click", () => {
+      const notification = document.getElementById("notification").value
+      fetch("/admin/notification", {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({notification})
+      })
+    });
+  </script>
 {% endblock %}

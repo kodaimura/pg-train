@@ -5,16 +5,18 @@
     [pg-train.template :as template]
     [pg-train.models.question :as models.question]
     [pg-train.models.answer :as models.answer]
-    [pg-train.models.message :as models.message]))
+    [pg-train.models.message :as models.message]
+    [pg-train.models.general :as models.general]))
 
 
 (defn home-page
   [req]
   (let [user_id (jwt/payload-id req)
         username (jwt/payload-username req)
-        qc (models.question/get-qc user_id)]
+        qc (models.question/get-qc user_id)
+        notification (models.general/get-by-key1 "notification")]
   (response (template/render "home.html" 
-              {:qc qc :username username}))))
+              {:qc qc :username username :notification (first notification)}))))
 
 (defn questions-page
   [req]

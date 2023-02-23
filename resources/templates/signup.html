@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block navbar %}
+  <a class="btn btn-secondary" href="#" onClick="history.back(); return false;">戻る</a>
+{% endblock %}
 {% block content %}
   <p id="error"></p>
   <form name="signupForm" onsubmit="return false">

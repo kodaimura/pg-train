@@ -9,23 +9,21 @@
   <h1 class="fs-6 mb-3">管理者用</h1>
   <div class="row">
     <h2 class="fs-5">お知らせ</h2>
-    <div class="col-md-5 mb-5">
+    <div class="col-md-6 mb-5">
       <textarea id="announce" class="form-control" rows="20">{{announce.general/value}}</textarea>
       <div class="text-end">
         <input type="button" class="btn btn-primary" id="send-announce" value="登録">
       </div>
     </div>
-    <div class="col-md-7">
-      <ul>
+    <div class="col-md-6">
       {% for n in notification %}
-      <li>
+      <div>
         <a href="{{n.notification/url_path}}">{{n.notification/message}}</a>
-        {{n.notification/create_at}}
+        <span style="font-size:0.9em">{{n.notification/create_at}}</span>
         <input type="button" class="btn btn-sm text-primary" value="削除" 
           onClick="deleteNotification({{n.notification/notification_id}})">
-      </li>
+      </div>
       {% endfor %}
-      </ul>
     </div>
   </div>
   <script type="text/javascript">

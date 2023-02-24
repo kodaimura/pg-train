@@ -104,10 +104,10 @@
   		:message (:message params)
   	})
   	(models.notification/insert! {
-  		:message (str "新着メッセージがあります。ユーザID:" user_id)
+  		:message (str "新着メッセージがあります。(ユーザID: " user_id ")")
   		:send_from user_id
   		:send_to 1
-  		:url_path (str "/admin/messages?send_to=" user_id)
+  		:url_path (str "/admin/messages?user_id=" user_id)
   	})
   	(status 200)))
 

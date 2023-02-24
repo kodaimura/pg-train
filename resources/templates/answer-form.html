@@ -8,7 +8,7 @@
   <input type="hidden" id="correct-answer" value="{{question.question/answer}}">
 
   <form name="answerForm" onsubmit="return false">
-    <div id="msg" class="fs-3"></div>
+    <div id="msg-send-answer" class="fs-3"></div>
     {% if answer.answer/correct_flg = "1" %}
     <input type="text" name="answer" value="{{question.question/answer}}" disabled>
     <input type="button" id="send-answer" value="回答" disabled>
@@ -30,6 +30,7 @@
   <hr>
   <h5>プログラム</h5>
   <form name="programForm" onsubmit="return false">
+    <div id="msg-send-program"></div>
     <textarea name="program" class="form-control" rows="9">{{answer.answer/program}}</textarea>
     <div class="w-100 text-end">
       <input type="submit" class="btn btn-primary" id="send-program" value="プログラムを送信">
@@ -44,21 +45,21 @@
       const correctAnswer = document.getElementById('correct-answer').value;
       const form = document.forms.answerForm;
 
-      document.getElementById('msg').classList.remove("text-secondary");
-      document.getElementById('msg').classList.remove("text-success");
+      document.getElementById('msg-send-answer').classList.remove("text-secondary");
+      document.getElementById('msg-send-answer').classList.remove("text-success");
       if (correctAnswer === form.answer.value) {
         fetch(`${location.pathname}/correct`, {method: 'POST'})
-        document.getElementById('msg').classList.add("text-success");
-        document.getElementById('msg').innerHTML = "Correct!!!";
+        document.getElementById('msg-send-answer').classList.add("text-success");
+        document.getElementById('msg-send-answer').innerHTML = "Correct!!!";
         form.answer.disabled = true;
         event.target.disabled = true;
       } else {
-        document.getElementById('msg').classList.add("text-secondary");
-        document.getElementById('msg').innerHTML = "Miss";
+        document.getElementById('msg-send-answer').classList.add("text-secondary");
+        document.getElementById('msg-send-answer').innerHTML = "Miss";
       }
 
       setTimeout(() => {
-        document.getElementById('msg').innerHTML = "";
+        document.getElementById('msg-send-answer').innerHTML = "";
       }, 4000);
 
     })
@@ -70,7 +71,20 @@
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({program})
-      })
+      }).then(response => {
+        document.getElementById('msg-send-program').classList.remove("text-danger");
+        document.getElementById('msg-send-program').classList.remove("text-success");
+        if (response.ok) {
+          document.getElementById('msg-send-program').classList.add("text-success");
+          document.getElementById('msg-send-program').innerHTML = "SAVED";
+        } else {
+          document.getElementById('msg-send-program').classList.add("text-danger");
+          document.getElementById('msg-send-program').innerHTML = "ERROR";
+        }
+        setTimeout(() => {
+          document.getElementById('msg-send-program').innerHTML = "";
+        }, 4000);
+      });
     })
 
     document.getElementById('send-help').addEventListener('click', (event) => {

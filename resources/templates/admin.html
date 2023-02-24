@@ -10,6 +10,7 @@
   <div class="row">
     <h2 class="fs-5">お知らせ</h2>
     <div class="col-md-6 mb-5">
+      <div id="msg"></div>
       <textarea id="announce" class="form-control" rows="20">{{announce.general/value}}</textarea>
       <div class="text-end">
         <input type="button" class="btn btn-primary" id="send-announce" value="登録">
@@ -33,7 +34,20 @@
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({announce})
-      })
+      }).then(response => {
+        document.getElementById('msg').classList.remove("text-danger");
+        document.getElementById('msg').classList.remove("text-success");
+        if (response.ok) {
+          document.getElementById('msg').classList.add("text-success");
+          document.getElementById('msg').innerHTML = "SAVED";
+        } else {
+          document.getElementById('msg').classList.add("text-danger");
+          document.getElementById('msg').innerHTML = "ERROR";
+        }
+        setTimeout(() => {
+          document.getElementById('msg').innerHTML = "";
+        }, 4000);
+      });
     });
 
     const deleteNotification = (id) => {

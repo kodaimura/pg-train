@@ -121,6 +121,11 @@
         (response {:messages messages 
     	             :last_time (:message/create_at　(last messages))}))))
 
+(defn delete-notification!
+  [{:keys [path-params]}]
+  (models.notification/delete! 
+    {:notification_id (:notification_id path-params)}))
+
 (defn wrap-home
   [handler]
   (fn [request]
@@ -140,4 +145,5 @@
    ["/questions/:question_id/help" {:post switch-help_flg!}]
    ["/questions/:question_id/program" {:post register-program!}]
    ["/messages" {:get chat-page :post register-message!}]
-   ["/api/messages" {:get api-messages}]])
+   ["/api/messages" {:get api-messages}]
+   ["/notification/:notification_id" {:delete delete-notification!}]])

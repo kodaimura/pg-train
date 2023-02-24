@@ -147,6 +147,11 @@
                            {:key1 "announce"})
   (status 200))
 
+(defn delete-notification!
+  [{:keys [path-params]}]
+  (models.notification/delete! 
+    {:notification_id (:notification_id path-params)}))
+
 (defn wrap-admin
   [handler]
   (fn [request]
@@ -154,6 +159,7 @@
       (if (= name "admin") 
           (handler request)
           (redirect "/")))))
+
 
 (def admin-routes
   ["/admin"
@@ -173,4 +179,5 @@
    ["/users/new" {:get signup-page :post register-user!}]
    ["/messages" {:get chat-page :post register-message!}]
    ["/api/messages" {:get api-messages}]
-   ["/announce" {:post register-announce!}]])
+   ["/announce" {:post register-announce!}]
+   ["/notification/:notification_id" {:delete delete-notification!}]])

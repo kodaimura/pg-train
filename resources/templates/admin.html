@@ -18,8 +18,12 @@
     <div class="col-md-7">
       <ul>
       {% for n in notification %}
-      <li><a href="{{n.notification/url_path}}">{{n.notification/message}}</a>{{n.notification/create_at}}
-        <input type="button" class="btn btn-sm text-primary" value="削除"></li>
+      <li>
+        <a href="{{n.notification/url_path}}">{{n.notification/message}}</a>
+        {{n.notification/create_at}}
+        <input type="button" class="btn btn-sm text-primary" value="削除" 
+          onClick="deleteNotification({{n.notification/notification_id}})">
+      </li>
       {% endfor %}
       </ul>
     </div>
@@ -33,5 +37,10 @@
         body: JSON.stringify({announce})
       })
     });
+
+    const deleteNotification = (id) => {
+      fetch(`/admin/notification/${id}`, {method: "DELETE"})
+      .then(() => {window.location.reload()})
+    }
   </script>
 {% endblock %}

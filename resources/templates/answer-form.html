@@ -21,9 +21,9 @@
   <form name="helpForm" onsubmit="return false">
     <div class="w-100 text-end">
       {% if answer.answer/help_flg = "1" %}
-      <input type="button" class="btn btn-warning" id="send-help" value="ヘルプ解除">
+      <input type="button" class="btn btn-warning" id="send-help" value="ヘルプ取消">
       {% else %}
-      <input type="button" class="btn btn-outline-warning" id="send-help" value="ヘルプ">
+      <input type="button" class="btn btn-warning" id="send-help" value="ヘルプ">
       {% endif %}
     </div>
   </form>
@@ -73,9 +73,11 @@
       })
     })
 
-    document.getElementById('send-help').addEventListener('click', () => {
+    document.getElementById('send-help').addEventListener('click', (event) => {
       fetch(`${location.pathname}/help`, {method: 'POST'})
-      .then(() => location.reload());
+      .then(() => {
+        event.target.value = (event.target.value == "ヘルプ")? "ヘルプ取消" : "ヘルプ";
+      });
     })
   </script>
 {% endblock %}

@@ -71,14 +71,20 @@
       });
     })
 
-    document.getElementById('send-settled').addEventListener('click', () => {
+    document.getElementById('send-settled').addEventListener('click', (event) => {
       fetch(`${location.pathname}/settled`, {method: 'POST'})
-      .then(() => {window.location.reload()});
+      .then(() => {
+        event.target.classList.remove("btn-warning")
+        event.target.classList.add("btn-secondary")
+        event.target.disabled = true
+      });
     })
 
-    document.getElementById('send-reaction').addEventListener('click', () => {
+    document.getElementById('send-reaction').addEventListener('click', (event) => {
       fetch(`${location.pathname}/reaction`, {method: 'POST'})
-      .then(() => {window.location.reload()});
+      .then(() => {
+        event.target.disabled = true
+      });
     })
   </script>
   <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&skin=default"></script>

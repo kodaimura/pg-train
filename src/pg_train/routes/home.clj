@@ -14,17 +14,17 @@
   [req]
   (let [user_id (jwt/payload-id req)
         username (jwt/payload-username req)
-        qc (models.question/get-qc user_id)
+        qas (models.question/get-qas user_id)
         announce (models.general/get-by-key1 "announce")
         notification (models.notification/get-notification (jwt/payload-id req))]
   (response (template/render "home.html" 
-              {:qc qc :username username :announce (first announce) :notification notification}))))
+              {:qas qas :username username :announce (first announce) :notification notification}))))
 
 (defn questions-page
   [req]
-  (let [questions (models.question/get-valid-questions)]
+  (let [qas (models.question/get-qas (jwt/payload-id req))]
     (response (template/render "questions.html"
-                {:questions questions}))))
+                {:qas qas}))))
 
 (defn chat-page
   [req]

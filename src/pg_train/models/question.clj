@@ -65,12 +65,16 @@
           from question"]]
     (sql/query db sql)))
 
-(defn get-qc
+(defn get-qas
   [user_id]
   (let [sql [
          "select
-           	q.question_id,
-            a.correct_flg
+            q.question_id,
+            q.title,
+            q.level, 
+            q.correct_count,
+            a.correct_flg,
+            a.reaction_flg
           from question as q
           left outer join (select * from answer where user_id = ?) as a
             on q.question_id = a.question_id

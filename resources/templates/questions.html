@@ -13,15 +13,21 @@
       <th>難易度</th>
       <th>解答人数</th>
       <th></th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
-    {% for q in questions %}
+    {% for q in qas %}
+      {% if q.answer/correct_flg = 1 %}
+      <tr style="background-color: #e2fcdc;">
+      {% else %}
       <tr>
+      {% endif %}
         <td>{{q.question/question_id}}</td>
         <td>{{q.question/title}}</td>
         <td>{{q.question/level}}</td>
         <td>{{q.question/correct_count}}</td>
+        <td>{% if q.answer/correct_flg = 1 %}👍{% endif %}</td>
         <td><a href="questions/{{q.question/question_id}}">回答</a></td>
       </tr>
     {% endfor %}

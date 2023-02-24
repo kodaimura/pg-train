@@ -3,7 +3,6 @@
   <a class="btn btn-secondary" href="#" onClick="history.back(); return false;">戻る</a>
 {% endblock %}
 {% block content %}
-  <input type="hidden" id="send_to" value="{{user_id}}">
   <input type="hidden" id="last_time" value="{{last_time}}">
   <div>
     <div id="messages">
@@ -29,15 +28,14 @@
 
     document.getElementById("send").addEventListener("click", () => {
       const message = document.getElementById("message").value;
-      const send_to = document.getElementById("send_to").value;
       const last_time = document.getElementById("last_time").value;
 
       fetch("/messages", {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({send_to, message})
+        body: JSON.stringify({message})
       }).then(() => {
-        fetch(`/api/messages?user_id=${send_to}&last_time=${last_time}`)
+        fetch(`/api/messages?last_time=${last_time}`)
         .then((response) => response.json())
         .then((data) => {
           document.getElementById("last_time").value = data["last_time"];
@@ -76,11 +74,11 @@
     }
 
     const polling = () => {
-      const send_to = document.getElementById("send_to").value;
+      const send_from = document.getElementById("send_from").value;
 
       setTimeout(async () => {
         const last_time = document.getElementById("last_time").value;
-        await fetch(`/api/messages?user_id=${send_to}&last_time=${last_time}`)
+        await fetch(`/api/messages?last_time=${last_time}`)
         .then((response) => response.json())
         .then((data) => {
           document.getElementById("last_time").value = data["last_time"];

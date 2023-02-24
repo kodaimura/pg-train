@@ -10,20 +10,27 @@
   <div class="row">
     <h2 class="fs-5">お知らせ</h2>
     <div class="col-md-5 mb-5">
-      <textarea id="notification" class="form-control" rows="20">{{notification.general/value}}</textarea>
+      <textarea id="announce" class="form-control" rows="20">{{announce.general/value}}</textarea>
       <div class="text-end">
-        <input type="button" class="btn btn-primary" id="send-notification" value="登録">
+        <input type="button" class="btn btn-primary" id="send-announce" value="登録">
       </div>
     </div>
+    <div class="col-md-7">
+      <ul>
+      {% for n in notification %}
+      <li><a href="{{n.notification/url_path}}">{{n.notification/message}}</a>{{n.notification/create_at}}
+        <input type="button" class="btn btn-sm text-primary" value="削除"></li>
+      {% endfor %}
+      </ul>
+    </div>
   </div>
-
   <script type="text/javascript">
-    document.getElementById("send-notification").addEventListener("click", () => {
-      const notification = document.getElementById("notification").value
-      fetch("/admin/notification", {
+    document.getElementById("send-announce").addEventListener("click", () => {
+      const announce = document.getElementById("announce").value
+      fetch("/admin/announce", {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({notification})
+        body: JSON.stringify({announce})
       })
     });
   </script>

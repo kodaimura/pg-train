@@ -1,1 +1,1 @@
-insert into general (key1, value, remarks) values ("notification", "お知らせ", "お知らせ");
+insert into general (key1, value, remarks) values ("announce", "お知らせ", "お知らせ");

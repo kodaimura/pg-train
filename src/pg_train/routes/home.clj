@@ -6,6 +6,7 @@
     [pg-train.models.question :as models.question]
     [pg-train.models.answer :as models.answer]
     [pg-train.models.message :as models.message]
+    [pg-train.models.notification :as models.notification]
     [pg-train.models.general :as models.general]))
 
 
@@ -14,9 +15,10 @@
   (let [user_id (jwt/payload-id req)
         username (jwt/payload-username req)
         qc (models.question/get-qc user_id)
-        notification (models.general/get-by-key1 "notification")]
+        announce (models.general/get-by-key1 "announce")
+        notification (models.notification/get-notification (jwt/payload-id req))]
   (response (template/render "home.html" 
-              {:qc qc :username username :notification (first notification)}))))
+              {:qc qc :username username :announce (first announce) :notification notification}))))
 
 (defn questions-page
   [req]
@@ -94,18 +96,25 @@
 
 (defn register-message!
   [req]
-  (let [params (:params req)]
+  (let [params (:params req)
+        user_id (jwt/payload-id req)]
   	(models.message/insert! {
-  		:send_from (jwt/payload-id req)
+  		:send_from user_id
   		:send_to 1
   		:message (:message params)
+  	})
+  	(models.notification/insert! {
+  		:message (str "新着メッセージがあります。ユーザID:" user_id)
+  		:send_from user_id
+  		:send_to 1
+  		:url_path (str "/admin/messages?send_to=" user_id)
   	})
   	(status 200)))
 
 (defn api-messages
-  [{:keys [params]}]
-  (let [last_time (:last_time params)
-        user_id (:user_id params)
+  [req]
+  (let [last_time (get-in req [:params :last_time])
+        user_id (jwt/payload-id req)
         messages (models.message/get-messages-after user_id 1 last_time)]
     (if (empty? messages)
         (response {:messages [] :last_time last_time})

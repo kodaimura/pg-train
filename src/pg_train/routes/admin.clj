@@ -8,14 +8,16 @@
     [pg-train.models.answer :as models.answer]
     [pg-train.models.user :as models.user]
     [pg-train.models.message :as models.message]
+    [pg-train.models.notification :as models.notification]
     [pg-train.models.general :as models.general]))
 
 
 (defn admin-page
   [req]
-  (let [notification (models.general/get-by-key1 "notification")]
+  (let [announce (models.general/get-by-key1 "announce")
+        notification (models.notification/get-notification (jwt/payload-id req))]
   	(response (template/render "admin.html" 
-  	             {:notification (first notification)}))))
+  	             {:announce (first announce) :notification notification}))))
 
 (defn questions-page
   [req]
@@ -84,6 +86,12 @@
   	:send_to (:send_to params)
   	:message (:message params)
   	})
+  (models.notification/insert! {
+  	:message "新着メッセージがあります。"
+  	:send_from 1
+  	:send_to (:send_to params)
+  	:url_path "/messages"
+  	})
   (status 200))
 
 (defn register-question!
@@ -101,11 +109,23 @@
 (defn settled!
   [{:keys [path-params]}]
   (models.answer/update! {:help_flg "0"} path-params)
+  (models.notification/insert! {
+  	:message (str "ID:" (:question_id path-params) "にコメントがありました。")
+  	:send_from 1
+  	:send_to (:user_id path-params)
+  	:url_path (str "/questions/" (:question_id path-params))
+  	})
   (status 200))
 
 (defn reaction!
   [{:keys [path-params]}]
   (models.answer/update! {:reaction_flg "1"} path-params)
+  (models.notification/insert! {
+  	:message (str "ID:" (:question_id path-params) "にリアクションがありました。")
+  	:send_from 1
+  	:send_to (:user_id path-params)
+  	:url_path (str "/questions/" (:question_id path-params))
+  	})
   (status 200))
 
 (defn signup-page
@@ -121,10 +141,10 @@
         (status 409))
     (status 200)))
 
-(defn register-notification!
+(defn register-announce!
   [{:keys [params]}]
-  (models.general/update! {:value (:notification params)} 
-                           {:key1 "notification"})
+  (models.general/update! {:value (:announce params)} 
+                           {:key1 "announce"})
   (status 200))
 
 (defn wrap-admin
@@ -153,4 +173,4 @@
    ["/users/new" {:get signup-page :post register-user!}]
    ["/messages" {:get chat-page :post register-message!}]
    ["/api/messages" {:get api-messages}]
-   ["/notification" {:post register-notification!}]])
+   ["/announce" {:post register-announce!}]])

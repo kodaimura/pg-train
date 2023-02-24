@@ -36,7 +36,17 @@ CREATE TABLE IF NOT EXISTS message (
 	message TEXT NOT NULL,
 	send_from INTEGER NOT NULL,
 	send_to INTEGER NOT NULL,
-	read_flg INTEGER DEFAULT '0',
+	read_flg CHAR(1) DEFAULT '0',
+	create_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
+	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime'))
+);
+
+CREATE TABLE IF NOT EXISTS notification (
+	notification_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	message TEXT,
+	send_from INTEGER,
+	send_to INTEGER,
+	url_path TEXT,
 	create_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
 	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime'))
 );

@@ -3,15 +3,32 @@
   <a class="btn btn-secondary" href="#" onClick="history.back(); return false;">戻る</a>
 {% endblock %}
 {% block content %}
-  <input type="hidden" id="last_time" value="{{last_time}}">
+  <style>
+    .message_date {font-size:0.8em}
+    .message_content {white-space:pre-wrap;}
+  </style>
+
+  <input type="hidden" id="my_id" value="{{my_id}}">
+  <input type="hidden" id="partner_id" value="{{partner_id}}">
+  <input type="hidden" id="min_message_id" value="{{min_message_id}}">
+  <input type="hidden" id="max_message_id" value="{{max_message_id}}">
   <div>
     <div id="messages">
       {% for m in messages %}
-      <div>
+      <div class="row">
         <hr>
-        <div class="fw-bold">
-          {% if m.message/send_from = 1 %}村上晃大{% else %}me{% endif %}{{m.message/create_at}}</div>
-        <pre class="">{{m.message/message}}</pre>
+        <div class="col-md-6">
+          {% if m.message/send_from = partner_id %}
+          <div class="message_date">{{m.message/create_at}}</div>
+          <pre class="message_content">{{m.message/message}}</pre>
+          {% endif %}
+        </div>
+        <div class="col-md-6">
+          {% if m.message/send_from = my_id %}
+          <div class="message_date">{{m.message/create_at}}</div>
+          <pre class="message_content">{{m.message/message}}</pre>
+          {% endif %}
+        </div>
       </div>
       {% endfor %}
     </div>
@@ -25,63 +42,131 @@
   </div>
   <script type="text/javascript">
     document.body.scrollIntoView(false);
+    const myId = document.getElementById("my_id").value
+    const partnerId = document.getElementById("partner_id").value
+
+    const renderNewMessages = (messages) => {
+      let msgDiv;
+
+      for (m of messages) {
+        msgDiv = createMessageElement(m)
+        document.getElementById("messages").appendChild(msgDiv);
+        document.body.scrollIntoView(false);
+      }
+    }
+
+    const renderOldMessages = (messages) => {
+      let msgDiv;
+
+      for (m of messages) {
+        msgDiv = createMessageElement(m)
+        document.getElementById("messages").prepend(msgDiv);
+        document.body.scrollIntoView(false);
+      }
+    }
+
+    const createMessageElement = (message) => {
+      let hr = document.createElement("hr");
+      let rowDiv = document.createElement("div");
+      let colDiv1 = document.createElement("div");
+      let colDiv2 = document.createElement("div");
+      let div = document.createElement("div");
+      let pre = document.createElement("pre");
+      let divText = document.createTextNode(message["message/create_at"]);
+      let preText = document.createTextNode(message["message/message"]);
+
+      div.appendChild(divText);
+      pre.appendChild(preText);
+
+      div.className = "message_date";
+      pre.className = "message_content";
+      rowDiv.className = "row"
+      colDiv1.className = "col-md-6"
+      colDiv2.className = "col-md-6"
+
+      if (message["message/send_from"] == myId) {
+        colDiv2.appendChild(div);
+        colDiv2.appendChild(pre);
+      } else {
+        colDiv1.appendChild(div);
+        colDiv1.appendChild(pre);
+      }
+  
+      rowDiv.appendChild(hr);
+      rowDiv.appendChild(colDiv1);
+      rowDiv.appendChild(colDiv2);
+      
+      return rowDiv
+    }
 
     document.getElementById("send").addEventListener("click", () => {
       const message = document.getElementById("message").value;
-      const last_time = document.getElementById("last_time").value;
+      const maxMessageId = document.getElementById("max_message_id").value;
 
-      fetch("/messages", {
+      fetch(`/chat/messages?send_to=${partnerId}`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({message})
       }).then(() => {
-        fetch(`/api/messages?last_time=${last_time}`)
+        console.log(`/chat/messages?user_id=${partnerId}&max_message_id=${maxMessageId}&type=after`)
+        fetch(`/chat/messages?user_id=${partnerId}&max_message_id=${maxMessageId}&type=after`)
         .then((response) => response.json())
         .then((data) => {
-          document.getElementById("last_time").value = data["last_time"];
+          console.log(data) 
+          if (data["max_message_id"] !== null) {
+            document.getElementById("max_message_id").value = data["max_message_id"]
+          }
+          if (data["min_message_id"] !== null) {
+            document.getElementById("min_message_id").value = data["min_message_id"]
+          }
           renderNewMessages(data["messages"]);
           document.getElementById("message").value = "";
         })
       })
     })
 
-    const renderNewMessages = (messages) => {
-      let hr = document.createElement("hr");
-      let msgDiv;
-      let div;
-      let pre;
-      let divText;
-      let preText;
+    let position = 0;
+    let messages = [];
+    window.addEventListener('scroll', async (event) => {
+      if (position > document.documentElement.scrollTop && document.documentElement.scrollTop === 0) {
+        if (Array.isArray(messages) && messages.length) {
+          document.getElementById("messages").prepend(createMessageElement(messages[0]))
+          messages.shift();
+          document.documentElement.scrollTop = 40
 
-      for (m of messages) {
-        msgDiv = document.createElement("div");
-        div = document.createElement("div");
-        pre = document.createElement("pre");
-        divText = document.createTextNode(`${(m["message/send_from"] == "1")? "村上晃大" : "me"}${m["message/create_at"]}`);
-        preText = document.createTextNode(m["message/message"]);
-        
-        div.className = "fw-bold";
-        div.appendChild(divText);
-        pre.appendChild(preText);
-  
-        msgDiv.appendChild(hr);
-        msgDiv.appendChild(div);
-        msgDiv.appendChild(pre);
+        } else {
+          const minMessageId = document.getElementById("min_message_id").value;
 
-        document.getElementById("messages").appendChild(msgDiv);
-        document.body.scrollIntoView(false);
+          await fetch(`/chat/messages?user_id=${partnerId}&min_message_id=${minMessageId}&type=before`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data["min_message_id"] !== null) {
+              document.getElementById("min_message_id").value = data["min_message_id"]
+            }
+            messages = data["messages"];
+            if (Array.isArray(messages) && messages.length) {
+              document.getElementById("messages").prepend(createMessageElement(messages[0]));
+              messages.shift();
+              document.documentElement.scrollTop = 40
+            } 
+          });
+        }
       }
-    }
+      position = document.documentElement.scrollTop;
+    });
 
     const polling = () => {
-      const send_from = document.getElementById("send_from").value;
-
       setTimeout(async () => {
-        const last_time = document.getElementById("last_time").value;
-        await fetch(`/api/messages?last_time=${last_time}`)
+        const maxMessageId = document.getElementById("max_message_id").value;
+        await fetch(`/chat/messages?user_id=${partnerId}&max_message_id=${maxMessageId}&type=after`)
         .then((response) => response.json())
         .then((data) => {
-          document.getElementById("last_time").value = data["last_time"];
+          if (data["max_message_id"] !== null) {
+            document.getElementById("max_message_id").value = data["max_message_id"]
+          }
+          if (data["min_message_id"] !== null) {
+            document.getElementById("min_message_id").value = data["min_message_id"]
+          }
           renderNewMessages(data["messages"]);
         });
 

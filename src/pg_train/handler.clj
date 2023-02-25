@@ -4,13 +4,14 @@
     [pg-train.routes.user :refer [account-routes user-routes]]
     [pg-train.routes.admin :refer [admin-routes]]
     [pg-train.routes.home :refer [home-routes]]
+    [pg-train.routes.chat :refer [chat-routes]]
     [pg-train.middleware :as middleware]))
 
 
 (def app-routes
   (ring/ring-handler
     (ring/router
-      [account-routes user-routes admin-routes home-routes])
+      [account-routes user-routes admin-routes home-routes chat-routes])
     (ring/routes
       (ring/create-resource-handler {:path "/"}))))
 

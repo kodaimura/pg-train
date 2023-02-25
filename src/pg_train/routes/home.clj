@@ -5,7 +5,6 @@
     [pg-train.template :as template]
     [pg-train.models.question :as models.question]
     [pg-train.models.answer :as models.answer]
-    [pg-train.models.message :as models.message]
     [pg-train.models.notification :as models.notification]
     [pg-train.models.general :as models.general]))
 
@@ -25,15 +24,6 @@
   (let [qas (models.question/get-qas (jwt/payload-id req))]
     (response (template/render "questions.html"
                 {:qas qas}))))
-
-(defn chat-page
-  [req]
-  (let [user_id (jwt/payload-id req)
-        messages (models.message/get-chat user_id 1)]
-    (response (template/render "chat.html"
-                {:user_id user_id 
-                 :messages messages 
-                 :last_time (:message/create_at (last messages))}))))
 
 (defn answer-page
   [req]
@@ -68,7 +58,7 @@
     (models.question/inc-correctcount! question_id)
     (status 200)))
 
-(defn bit-not
+(defn switch-bit
   [bit]
   (if (= bit "1") "0" "1"))
 
@@ -79,7 +69,7 @@
         answer (models.answer/get-answer question_id user_id)]
     (if (empty? answer)
         (models.answer/insert! (answer-init question_id user_id {:help_flg "1"}))
-        (models.answer/update! {:help_flg (bit-not (:answer/help_flg (first answer)))} 
+        (models.answer/update! {:help_flg (switch-bit (:answer/help_flg (first answer)))} 
                                {:question_id question_id :user_id user_id}))
     (status 200)))
 
@@ -93,33 +83,6 @@
         (models.answer/insert! (answer-init question_id user_id {:program program}))
         (models.answer/update! {:program program} {:question_id question_id :user_id user_id}))
     (status 200)))
-
-(defn register-message!
-  [req]
-  (let [params (:params req)
-        user_id (jwt/payload-id req)]
-  	(models.message/insert! {
-  		:send_from user_id
-  		:send_to 1
-  		:message (:message params)
-  	})
-  	(models.notification/insert! {
-  		:message (str "新着メッセージがあります。(ユーザID: " user_id ")")
-  		:send_from user_id
-  		:send_to 1
-  		:url_path (str "/admin/messages?user_id=" user_id)
-  	})
-  	(status 200)))
-
-(defn api-messages
-  [req]
-  (let [last_time (get-in req [:params :last_time])
-        user_id (jwt/payload-id req)
-        messages (models.message/get-messages-after user_id 1 last_time)]
-    (if (empty? messages)
-        (response {:messages [] :last_time last_time})
-        (response {:messages messages 
-    	             :last_time (:message/create_at　(last messages))}))))
 
 (defn delete-notification!
   [{:keys [path-params]}]
@@ -144,6 +107,4 @@
    ["/questions/:question_id/correct" {:post register-correct_flg!}]
    ["/questions/:question_id/help" {:post switch-help_flg!}]
    ["/questions/:question_id/program" {:post register-program!}]
-   ["/messages" {:get chat-page :post register-message!}]
-   ["/api/messages" {:get api-messages}]
    ["/notification/:notification_id" {:delete delete-notification!}]])

@@ -7,7 +7,6 @@
     [pg-train.models.question :as models.question]
     [pg-train.models.answer :as models.answer]
     [pg-train.models.user :as models.user]
-    [pg-train.models.message :as models.message]
     [pg-train.models.notification :as models.notification]
     [pg-train.models.general :as models.general]))
 
@@ -30,15 +29,6 @@
   (let [answers (models.answer/get-qas params)]
     (response (template/render "admin-answers.html"
                 {:answers answers}))))
-
-(defn chat-page
-  [{:keys [params]}]
-  (let [user_id (:user_id params)
-        messages (models.message/get-chat user_id 1)]
-    (response (template/render "admin-chat.html"
-                {:user_id user_id 
-                 :messages messages 
-                 :last_time (:message/create_at (last messages))}))))
 
 (defn users-page
   [req]
@@ -68,31 +58,6 @@
   [{:keys [params]}]
   (let [answers (models.answer/get-qas params)]
     (response {:answers answers})))
-
-(defn api-messages
-  [{:keys [params]}]
-  (let [last_time (:last_time params)
-        user_id (:user_id params)
-        messages (models.message/get-messages-after user_id 1 last_time)]
-    (if (empty? messages)
-        (response {:messages [] :last_time last_time})
-        (response {:messages messages 
-    	             :last_time (:message/create_at　(last messages))}))))
-
-(defn register-message!
-  [{:keys [params]}]
-  (models.message/insert! {
-  	:send_from 1
-  	:send_to (:send_to params)
-  	:message (:message params)
-  	})
-  (models.notification/insert! {
-  	:message "新着メッセージがあります。"
-  	:send_from 1
-  	:send_to (:send_to params)
-  	:url_path "/messages"
-  	})
-  (status 200))
 
 (defn register-question!
   [{:keys [path-params params]}]
@@ -177,7 +142,5 @@
    ["/answers/:question_id/:user_id/reaction" {:post reaction!}]
    ["/users" {:get users-page}]
    ["/users/new" {:get signup-page :post register-user!}]
-   ["/messages" {:get chat-page :post register-message!}]
-   ["/api/messages" {:get api-messages}]
    ["/announce" {:post register-announce!}]
    ["/notification/:notification_id" {:delete delete-notification!}]])

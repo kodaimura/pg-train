@@ -12,8 +12,27 @@
   [key-map where-params]
   (sql/update! db :message key-map where-params))
 
-(defn get-chat
-  [user_id1 user_id2]
+(defn get-messages-recent-20
+  [my_id partner_id]
+  (let [sql [
+         "select * 
+           from
+            (select 
+              message_id,
+              message,
+              send_from, 
+              send_to,
+              read_flg,
+              create_at
+             from message
+             where ((send_to = ? and send_from = ?) or (send_to = ? and send_from = ?))
+             order by message_id desc limit 20) 
+           order by message_id"
+          my_id partner_id partner_id my_id]]
+    (sql/query db sql)))
+
+(defn get-messages-before-20
+  [my_id partner_id message_id]
   (let [sql [
          "select 
             message_id,
@@ -23,13 +42,15 @@
             read_flg,
             create_at
           from message
-          where (send_to = ? and send_from = ?)
-             or (send_to = ? and send_from = ?)"
-          user_id1 user_id2 user_id2 user_id1]]
+          where ((send_to = ? and send_from = ?) or (send_to = ? and send_from = ?))
+            and message_id < ?
+          order by message_id desc
+          limit 20"
+          my_id partner_id partner_id my_id message_id]]
     (sql/query db sql)))
 
 (defn get-messages-after
-  [user_id1 user_id2 time]
+  [my_id partner_id message_id]
   (let [sql [
          "select 
             message_id,
@@ -40,6 +61,6 @@
             create_at
           from message
           where (send_to = ? and send_from = ? or send_to = ? and send_from = ?)
-            and create_at > ?"
-          user_id1 user_id2 user_id2 user_id1 time]]
+            and message_id > ?"
+          my_id partner_id partner_id my_id message_id]]
     (sql/query db sql)))

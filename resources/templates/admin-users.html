@@ -23,7 +23,7 @@
         <td>{{u.users/username}}</td>
         <td>{{u.users/create_at}}</td>
         <td><a href="/admin/answers?user_id={{u.users/user_id}}">解答一覧</a></td>
-        <td><a href="/admin/messages?user_id={{u.users/user_id}}">チャット</a></td>
+        <td><a href="/chat?user_id={{u.users/user_id}}">チャット</a></td>
       </tr>
     {% endfor %}
     </tbody>

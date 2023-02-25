@@ -1,6 +1,6 @@
 {:logging {
-  :level #profile {:dev :debug
-                   :prod :debug}
+  :level #profile {:dev :info
+                   :prod :error}
   :console #profile {:prod {:encoder :json}
                      :default true}
   :file {:file "log/app.log"}

@@ -1,4 +1,5 @@
 (ns pg-train.core
+  (:gen-class)
   (:require 
     [postal.core :as postal]
     [ring.adapter.jetty9 :as jetty]
@@ -15,7 +16,7 @@
       {:host (get-in config [:webserver :host]) 
        :port (get-in config [:webserver :port])})) 
 
-(defn run
+(defn -main
   [& args]
   (let [config (config/read-config :dev)]
     (run-server config)))

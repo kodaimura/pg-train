@@ -10,8 +10,8 @@
     <tr>
       <th>QID</th>
       <th>タイトル</th>
+      <th></th>
       <th>難易度</th>
-      <th>解答人数</th>
       <th></th>
       <th></th>
     </tr>
@@ -24,9 +24,9 @@
       <tr>
       {% endif %}
         <td>{{q.question/question_id}}</td>
-        <td>{{q.question/title}}</td>
+        <td style="font-weight:bold;">{{q.question/title}}</td>
+        <td><p class="q-statement">{{q.question/statement}}</p></td>
         <td>{{q.question/level}}</td>
-        <td>{{q.question/correct_count}}</td>
         <td>{% if q.answer/correct_flg = 1 %}👍{% endif %}</td>
         <td><a href="questions/{{q.question/question_id}}">回答</a></td>
       </tr>

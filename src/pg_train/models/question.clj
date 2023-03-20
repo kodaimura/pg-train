@@ -72,6 +72,7 @@
             q.question_id,
             q.title,
             q.level, 
+            q.statement, 
             q.correct_count,
             a.correct_flg,
             a.reaction_flg

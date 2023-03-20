@@ -4,7 +4,7 @@
 {% endblock %}
 {% block content %}
   <h3>{{question.question/question_id}}. {{question.question/title}}</h3>
-  <div style="word-wrap:break-word;">{{question.question/statement}}</div>
+  <pre style="word-wrap:break-word;">{{question.question/statement}}</pre>
   <input type="hidden" id="correct-answer" value="{{question.question/answer}}">
 
   <form name="answerForm" onsubmit="return false">

@@ -10,7 +10,8 @@
 
 (defn unauthorized-handler
   [request]
-  (status 401))
+  (redirect "/login"))
+  ;(status 401))
 
 (defn unsign
   [token]
